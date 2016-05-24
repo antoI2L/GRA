@@ -358,7 +358,7 @@
          */
         this.prepare = function prepare(source, callbackSuccess) {
             if (source) {
-                if (GRA.utils.is.func(source)) {
+                if (GRA.utils.is.callable(source)) {
                     this.onSuccess(source);
                 } else {
                     this.setUrl(source);

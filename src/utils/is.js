@@ -88,7 +88,7 @@
 
             return firstCond && secondCond;
         },
-        func: function func(variable) {
+        callable: function callable(variable) {
             var firstCond = variable && variable.constructor,
                 secondCond = variable.call && variable.apply;
 

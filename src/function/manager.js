@@ -72,7 +72,7 @@
             if (GRA.utils.ObjectUtils.isAnonymous(callback)) {
                 anonymousLength += 1;
             } else {
-                callbackName = window.utils.ObjectUtils.getFunctionName(callback);
+                callbackName = GRA.utils.ObjectUtils.getFunctionName(callback);
             }
 
             callbacks.put(callbackName, {
@@ -110,7 +110,7 @@
         this.runAfter = function runAfter(delay, callbackName) {
             var callbackInfo;
 
-            if (GRA.utils.is.func(callbackName)) {
+            if (GRA.utils.is.callable(callbackName)) {
                 setTimeout(callbackName, delay * timeUnit);
             } else if (this.has(callbackName)) {
                 callbackInfo = callbacks.get(callbackName);
@@ -131,7 +131,7 @@
         this.runAsync = function runAsync(callback) {
             var callbackInfo;
 
-            if (GRA.utils.is.func(callback)) {
+            if (GRA.utils.is.callable(callback)) {
                 setTimeout(callback, 5);
             } else if (this.has(callback)) {
                 callbackInfo = callbacks.get(callback);

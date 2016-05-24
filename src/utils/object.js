@@ -51,7 +51,7 @@
         this.extend = function extend(childObject, parentObject) {
             var property;
 
-            if (GRA.utils.is.func(parentObject)) {
+            if (GRA.utils.is.callable(parentObject)) {
                 parentObject.apply(childObject);
             } else {
                 for (property in parentObject) {
