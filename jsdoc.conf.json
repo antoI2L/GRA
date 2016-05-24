@@ -1,0 +1,12 @@
+{
+  "templates": {
+    "systemName": "Librairie GRA.js",
+    "copyright": "© 2016 - D'oria Antony - Powered by ink-docstrap",
+    "dateFormat": "DD/MM/YYYY",
+    "cleverLinks": true,
+    "navType": "inline",
+    "outputSourceFiles": true,
+    "outputSourcePath": true,
+    "linenums": true
+  }
+}

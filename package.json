@@ -1,0 +1,28 @@
+{
+  "name": "gra",
+  "title": "GRA",
+  "description": "Librairie JS",
+  "version": "1.0.0",
+  "main": "dist/gra.js",
+  "author": {
+    "name": "D'oria Antony"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~1.0",
+    "grunt-contrib-concat": "~1.0",
+    "grunt-contrib-jshint": "~1.0",
+    "grunt-contrib-qunit": "~1.2",
+    "grunt-contrib-uglify": "~1.0",
+    "grunt-jsdoc": "^2.0.0",
+    "ink-docstrap": "^1.1.4",
+    "jquery": "^2.2.3",
+    "qunit": "latest",
+    "qunitjs": "^2.0.0-rc1"
+  },
+  "scripts": {
+    "build": "npm install && grunt",
+    "test": "grunt test"
+  }
+}

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Librairie GRA.js Source: datastructure/vector.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Librairie GRA.js</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="GRA.ajax.Ajax.html">GRA.ajax.Ajax</a></li><li><a href="GRA.ajax.Factory.html">GRA.ajax.Factory</a></li><li><a href="GRA.datastructure.BinarySearchTree.html">GRA.datastructure.BinarySearchTree</a></li><li><a href="GRA.datastructure.LinkedList.html">GRA.datastructure.LinkedList</a></li><li><a href="GRA.datastructure.Map.html">GRA.datastructure.Map</a></li><li><a href="GRA.datastructure.Queue.html">GRA.datastructure.Queue</a></li><li><a href="GRA.datastructure.Queue-QueueIterator.html">GRA.datastructure.Queue~QueueIterator</a></li><li><a href="GRA.datastructure.Stack.html">GRA.datastructure.Stack</a></li><li><a href="GRA.datastructure.Vector.html">GRA.datastructure.Vector</a></li><li><a href="GRA.datastructure.Vector-VectorIterator.html">GRA.datastructure.Vector~VectorIterator</a></li><li><a href="GRA.dom.JQueryProxy.html">GRA.dom.JQueryProxy</a></li><li><a href="GRA.fn.ExecutionQueue.html">GRA.fn.ExecutionQueue</a></li><li><a href="GRA.fn.Manager.html">GRA.fn.Manager</a></li><li><a href="GRA.fn.Promise.html">GRA.fn.Promise</a></li><li><a href="GRA.form.Form.html">GRA.form.Form</a></li><li><a href="GRA.form.Validator.html">GRA.form.Validator</a></li><li><a href="GRA.kernel.Application.html">GRA.kernel.Application</a></li><li><a href="GRA.kernel.Bus.html">GRA.kernel.Bus</a></li><li><a href="GRA.kernel.Kernel.html">GRA.kernel.Kernel</a></li><li><a href="GRA.kernel.Message.html">GRA.kernel.Message</a></li><li><a href="GRA.model.Model.html">GRA.model.Model</a></li><li><a href="GRA.storage.local.html">GRA.storage.local</a></li><li><a href="GRA.storage.session.html">GRA.storage.session</a></li><li><a href="GRA.utils.ArrayUtils.html">GRA.utils.ArrayUtils</a></li><li><a href="GRA.utils.DateUtils.html">GRA.utils.DateUtils</a></li><li><a href="GRA.utils.is.html">GRA.utils.is</a></li><li><a href="GRA.utils.ObjectUtils.html">GRA.utils.ObjectUtils</a></li><li><a href="GRA.utils.StringUtils.html">GRA.utils.StringUtils</a></li><li><a href="GRA.utils.TokenUtils.html">GRA.utils.TokenUtils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#conceal">conceal</a></li><li><a href="global.html#first">first</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#has">has</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#provide">provide</a></li><li><a href="global.html#reset">reset</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: datastructure/vector.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">(function (GRA) {
+
+    GRA.datastructure = GRA.datastructure || {};
+
+    /**
+     * Classe Vector.
+     * Représente un Vector
+     *
+     * @constructor
+     */
+    GRA.datastructure.Vector = function Vector() {
+        /**
+         * @type {Array}
+         */
+        var data = [],
+            /**
+             * Permet de créer un itérateur sur le vector
+             * passé en paramètre
+             *
+             * @param {Vector} vector Vecteur à itérer
+             * @constructor
+             */
+            VectorIterator = function VectorIterator(vector) {
+                /**
+                 * @type {number}
+                 */
+                var index = 0,
+                    /**
+                     * @type {GRA.datastructure.Vector}
+                     */
+                    collection = vector;
+
+                /**
+                 * Permet d'exécuter une fonction sur chaque élément de l'itérateur
+                 *
+                 * @param callback Fonction à exécuter sur chaque élément
+                 */
+                this.forEach = function forEach(callback) {
+                    var item;
+
+                    for (item = this.first(); this.hasNext(); item = this.next()) {
+                        callback(item);
+                    }
+                };
+
+                /**
+                 * Permet de retourner le premier élément de l'itérateur.
+                 * L'itérateur pointera alors sur le deuxième élément du vector
+                 *
+                 * @returns {*} Premier élément de l'itérateur
+                 */
+                this.first = function first() {
+                    this.reset();
+
+                    return this.next();
+                };
+
+                /**
+                 * Permet de savoir si l'itérateur possède encore des éléments à parcourir
+                 *
+                 * @returns {boolean} TRUE si l'itérateur n'est pas à la fin, FALSE sinon
+                 */
+                this.hasNext = function hasNext() {
+                    return collection.size() >= index;
+                };
+
+                /**
+                 * Permet de retourner le prochain élément de l'itérateur
+                 *
+                 * @returns {*}
+                 */
+                this.next = function next() {
+                    var element = collection.elementAt(index);
+                    index += 1;
+
+                    return element;
+                };
+
+                /**
+                 * Réinitialise l'itérateur
+                 */
+                this.reset = function reset() {
+                    index -= index;
+                };
+            };
+
+        /**
+         * Permet d'ajouter des éléments dans le Vector
+         *
+         * @param {...*}
+         */
+        this.add = function add() {
+            var argIndex;
+
+            for (argIndex = 0; argIndex &lt; arguments.length; argIndex += 1) {
+                data.push(arguments[argIndex]);
+            }
+        };
+
+        /**
+         * Permet d'insérer une liste d'éléments dans le Vector
+         *
+         * @param {Array} arrayOfData Tableau de données à insérer
+         */
+        this.addAll = function addAll(arrayOfData) {
+            var index,
+                totalData = arrayOfData.length;
+
+            if (!GRA.utils.is.array(arrayOfData)) {
+                throw new TypeError("La méthode Vector::addAll() ne prend en paramètre qu'un unique tableau.");
+            }
+
+            for (index = 0; index &lt; totalData; index += 1) {
+                this.add(arrayOfData[index]);
+            }
+        };
+
+        /**
+         * Permet de vider le vector
+         */
+        this.clear = function clear() {
+            GRA.utils.ArrayUtils.clear(data);
+        };
+
+        /**
+         * Permet de retourner l'élément se trouvant à l'indice passé en paramètre
+         *
+         * @param index Indice de l'élément à retourner
+         * @returns {*} Element situé à l'indice fourni en paramètre
+         */
+        this.elementAt = function elementAt(index) {
+            var element;
+
+            if (index &lt; this.size()) {
+                element = data[index];
+            }
+
+            return element;
+        };
+
+        /**
+         * Permet de retourner le premier élément du vector
+         *
+         * @returns {*} Premier élément du vector
+         */
+        this.firstElement = function firstElement() {
+            var element;
+
+            if (!this.isEmpty()) {
+                element = data[0];
+            }
+
+            return element;
+        };
+
+        /**
+         * Permet d'exécuter une fonction sur chaque élément du vector
+         *
+         * @param callback Fonction à exécuter sur chaque élément du vector
+         */
+        this.forEach = function forEach(callback) {
+            GRA.utils.ArrayUtils.forEach(data, callback);
+        };
+
+        /**
+         * Permet de savoir si le vector contient l'élément passé en paramètre
+         *
+         * @param element Elément à chercher
+         * @returns {boolean} TRUE si l'élément est contenu dans le vector, FALSE sinon
+         */
+        this.has = function has(element) {
+            return -1 &lt; this.indexOf(element);
+        };
+
+        /**
+         * Permet de retourner l'indice de l'élément fourni en paramètre.
+         * Si l'élément n'est pas trouvé, cette fonction retournera -1.
+         *
+         * @param {*} element Element dont l'indice est à rechercher
+         * @returns {number} Position de l'élément dans le vector
+         */
+        this.indexOf = function indexOf(element) {
+            return GRA.utils.ArrayUtils.indexOf(element, data);
+        };
+
+        /**
+         * Permet de savoir si le vector est vide
+         *
+         * @returns {boolean} TRUE si le vector est vide, FALSE sinon
+         */
+        this.isEmpty = function isEmpty() {
+            return 0 === this.size();
+        };
+
+        /**
+         * Permet de retourner un itérateur sur le vector
+         *
+         * @returns {VectorIterator} Itérateur
+         */
+        this.iterator = function iterator() {
+            return new VectorIterator(this);
+        };
+
+        /**
+         * Permet de retourner une chaîne de caractères dont chaque élément du vector sera
+         * concaténé ensemble. Si le délimiteur est spécifié, le délimiteur sera concaténé entre deux éléments.
+         * Si le délimiteur n'est pas spécifié, les éléments seront concaténés via une virgule.
+         *
+         * @param {string} [delimiter] Delimiteur
+         * @returns {string} Element concaténé sous forme de chaîne de caractères
+         */
+        this.join = function join(delimiter) {
+            return data.join(delimiter);
+        };
+
+        /**
+         * Permet de retourner le dernier élément du vector
+         *
+         * @returns {*} Le dernier élément du vector
+         */
+        this.lastElement = function lastElement() {
+            var element;
+
+            if (!this.isEmpty()) {
+                element = data[this.size() - 1];
+            }
+
+            return element;
+        };
+
+        /**
+         * Permet de supprimer l'élément fourni en paramètre du vector
+         *
+         * @param element Elément à supprimer
+         * @returns {*} Le résultat de la suppression
+         */
+        this.remove = function remove(element) {
+            var index = GRA.utils.ArrayUtils.indexOf(element, data);
+
+            return this.removeElementAt(index);
+        };
+
+        /**
+         * Permet de supprimer les éléments contenus dans le tableau fourni en paramètre du vector
+         *
+         * @param array Liste d'éléments à supprimer
+         */
+        this.removeAll = function removeAll(array) {
+            var index;
+
+            if (!GRA.utils.is.array(array)) {
+                throw new Error('Le paramètre de Vector::removeAll() doit être un tableau.');
+            }
+
+            for (index = 0; index &lt; array.length; index += 1) {
+                this.remove(array[index]);
+            }
+        };
+
+        /**
+         * Permet de supprimer l'élément se trouvant à l'indice fourni en paramètre
+         *
+         * @param index Indice de l'élément à supprimer
+         * @returns {*} L'élément supprimé si la suppression a été effectuée, undefined sinon
+         */
+        this.removeElementAt = function removeElementAt(index) {
+            var element;
+
+            if (index &lt; this.size()) {
+                element = data.splice(index, 1);
+            }
+
+            return element;
+        };
+
+        /**
+         * Permet d'inverser les éléments du vector
+         */
+        this.reverse = function reverse() {
+            data.reverse();
+        };
+
+        /**
+         * Permet de retourner la taille du vector
+         *
+         * @returns {Number} Taille du vector
+         */
+        this.size = function size() {
+            return data.length;
+        };
+
+        /**
+         * Permet d'ordonner les éléments du vector en fonction de la fonction passée en paramètre.
+         * La fonction recevra en paramètre deux éléments à comparer
+         *
+         * @param {function} sortFunction Fonction de tri
+         */
+        this.sort = function sort(sortFunction) {
+            data.sort(sortFunction);
+        };
+
+        /**
+         * Permet d'ordonner les éléments du vector par ordre croissant
+         */
+        this.sortAsc = function sortAsc() {
+            data.sort();
+        };
+
+        /**
+         * Permet d'ordonner les éléments du vector par ordre décroissant
+         */
+        this.sortDesc = function sortDesc() {
+            var sortInt = function sortInt(a, b) {
+                    return b - a;
+                },
+                sortString = function sortString(a, b) {
+                    return b.toString().localeCompare(a);
+                };
+
+            if (isNaN(data[0])) {
+                data.sort(sortString);
+            } else {
+                data.sort(sortInt);
+            }
+        };
+
+        /**
+         * Permet de retourner le vector sous la forme d'un tableau
+         *
+         * @returns {Array} Vector sous forme d'un tableau
+         */
+        this.toArray = function toArray() {
+            return data;
+        };
+    };
+
+}(GRA || {}));</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	© 2016 - D'oria Antony - Powered by ink-docstrap
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 24/05/2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

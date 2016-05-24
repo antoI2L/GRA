@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>GRA Test</title>
+        <link type="text/css" rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css"/>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+
+        <!-- Dépendances JS -->
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+        <script src="../dist/gra.min.js"></script>
+
+        <!-- Tests -->
+            <!-- Utils -->
+        <script src="utils/string_test.js"></script>
+        <script src="utils/array_test.js"></script>
+        <script src="utils/object_test.js"></script>
+            <!-- Storage -->
+        <script src="storage/session_test.js"></script>
+        <script src="storage/local_test.js"></script>
+            <!-- Datastructure -->
+        <script src="datastructure/vector_test.js"></script>
+        <script src="datastructure/map_test.js"></script>
+        <script src="datastructure/queue_test.js"></script>
+        <script src="datastructure/stack_test.js"></script>
+        <script src="datastructure/tree_test.js"></script>
+            <!-- Function -->
+        <script src="function/execution-queue_test.js"></script>
+        <script src="function/promise_test.js"></script>
+            <!-- Model -->
+        <script src="model/model_test.js"></script>
+            <!-- Form -->
+        <script src="form/validator_test.js"></script>
+        <script src="form/form_test.js"></script>
+            <!-- Kernel -->
+        <script src="kernel/application_test.js"></script>
+        <script src="kernel/message_test.js"></script>
+        <script src="kernel/bus_test.js"></script>
+        <script src="kernel/kernel_test.js"></script>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="dist/gra.min.js"></script>
+<script type="text/javascript">
+    var kernel = GRA.kernel.Kernel,
+        fnManager = new GRA.fn.Manager();
+
+    kernel.setDebug(true);
+
+    kernel.boot(function () {
+        var application = new GRA.kernel.Application('include');
+
+        application.on('boot', function () {
+            application.get('logger').log(application.uid);
+        });
+
+        application.on('start', function () {
+            application.get('logger').info('Je démarre');
+            throw new Error("Oups... Erreur survenue pendant le démarrage...");
+        });
+
+        application.on('stop', function () {
+            application.get('logger').error('Je meurt...');
+        });
+
+        return application;
+    });
+
+    kernel.startAll();
+
+    fnManager.runWhenReady(function () {
+        kernel.stopAll();
+    });
+</script>
+</body>
+</html>

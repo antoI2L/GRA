@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Librairie GRA.js Source: utils/date.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Librairie GRA.js</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="GRA.ajax.Ajax.html">GRA.ajax.Ajax</a></li><li><a href="GRA.ajax.Factory.html">GRA.ajax.Factory</a></li><li><a href="GRA.datastructure.BinarySearchTree.html">GRA.datastructure.BinarySearchTree</a></li><li><a href="GRA.datastructure.LinkedList.html">GRA.datastructure.LinkedList</a></li><li><a href="GRA.datastructure.Map.html">GRA.datastructure.Map</a></li><li><a href="GRA.datastructure.Queue.html">GRA.datastructure.Queue</a></li><li><a href="GRA.datastructure.Queue-QueueIterator.html">GRA.datastructure.Queue~QueueIterator</a></li><li><a href="GRA.datastructure.Stack.html">GRA.datastructure.Stack</a></li><li><a href="GRA.datastructure.Vector.html">GRA.datastructure.Vector</a></li><li><a href="GRA.datastructure.Vector-VectorIterator.html">GRA.datastructure.Vector~VectorIterator</a></li><li><a href="GRA.dom.JQueryProxy.html">GRA.dom.JQueryProxy</a></li><li><a href="GRA.fn.ExecutionQueue.html">GRA.fn.ExecutionQueue</a></li><li><a href="GRA.fn.Manager.html">GRA.fn.Manager</a></li><li><a href="GRA.fn.Promise.html">GRA.fn.Promise</a></li><li><a href="GRA.form.Form.html">GRA.form.Form</a></li><li><a href="GRA.form.Validator.html">GRA.form.Validator</a></li><li><a href="GRA.kernel.Application.html">GRA.kernel.Application</a></li><li><a href="GRA.kernel.Bus.html">GRA.kernel.Bus</a></li><li><a href="GRA.kernel.Kernel.html">GRA.kernel.Kernel</a></li><li><a href="GRA.kernel.Message.html">GRA.kernel.Message</a></li><li><a href="GRA.model.Model.html">GRA.model.Model</a></li><li><a href="GRA.storage.local.html">GRA.storage.local</a></li><li><a href="GRA.storage.session.html">GRA.storage.session</a></li><li><a href="GRA.utils.ArrayUtils.html">GRA.utils.ArrayUtils</a></li><li><a href="GRA.utils.DateUtils.html">GRA.utils.DateUtils</a></li><li><a href="GRA.utils.is.html">GRA.utils.is</a></li><li><a href="GRA.utils.ObjectUtils.html">GRA.utils.ObjectUtils</a></li><li><a href="GRA.utils.StringUtils.html">GRA.utils.StringUtils</a></li><li><a href="GRA.utils.TokenUtils.html">GRA.utils.TokenUtils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html#conceal">conceal</a></li><li><a href="global.html#first">first</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#has">has</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#provide">provide</a></li><li><a href="global.html#reset">reset</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: utils/date.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">(function (GRA) {
+    "use strict";
+
+    GRA.utils = GRA.utils || {};
+
+    /**
+     * Classe DateUtils
+     * Utilitaire permettant de manipuler facilement les dates
+     *
+     * @constructor
+     */
+    GRA.utils.DateUtils = function DateUtils() {
+
+        /**
+         *
+         * @param {Date} date
+         * @param {object} property
+         * @param {number} value
+         * @returns {Date}
+         */
+        this.add = function add(date, property, value) {
+            var getter = 'get' + GRA.utils.StringUtils.ucfirst(property),
+                setter = 'set' + GRA.utils.StringUtils.ucfirst(property),
+                currentValue;
+
+            if (date.hasOwnProperty(setter)) {
+                currentValue = date[getter]();
+                date[setter](currentValue + value);
+            } else {
+                switch (property) {
+                    case 'days':
+                        currentValue = date.getDate();
+                        date.setDate(currentValue + value);
+                        break;
+                    case 'years':
+                        currentValue = date.getFullYear();
+                        date.setFullYear(currentValue + value);
+                        break;
+                    case 'weeks':
+                        currentValue = date.getDate();
+                        date.setDate(currentValue + (value * 7));
+                        break;
+                    case 'months':
+                        currentValue = date.getMonth();
+                        date.setMonth(currentValue + value);
+                        break;
+                    default:
+                }
+            }
+
+            return date;
+        };
+
+        /**
+         *
+         * @param format
+         * @param date
+         * @returns {Date}
+         */
+        this.createFromFormat = function createFromFormat(format, date) {
+            var defaultFormat = format || 'dd/mm/yyyy',
+                parts = date.match(/(\d+)/g),
+                partNames = {},
+                index = 0;
+
+            defaultFormat = defaultFormat.toLowerCase();
+            defaultFormat.replace(/(yyyy|dd|mm)/g, function (part) {
+                index += 1;
+                partNames[part] = index;
+            });
+
+            return new Date(
+                parts[partNames.yyyy],
+                parts[partNames.mm] - 1,
+                parts[partNames.dd]
+            );
+        };
+
+        /**
+         *
+         * @param year
+         * @returns {boolean}
+         */
+        this.isLeap = function isLeap(year) {
+            var date = new Date(year, 1, 29);
+
+            return 1 === date.getMonth();
+        };
+
+        /**
+         *
+         * @param {Date} date
+         * @param {object} property
+         * @param {number} value
+         * @returns {Date}
+         */
+        this.sub = function sub(date, property, value) {
+            return this.add(date, property, value * -1);
+        };
+
+        /**
+         *
+         * @returns {number}
+         */
+        this.time = function time() {
+            return +new Date();
+        };
+
+        /**
+         *
+         * @param date
+         * @returns {string}
+         */
+        this.toDatabaseString = function toDatabaseString(date) {
+            var stringUtils = GRA.utils.StringUtils,
+                year = date.getFullYear(),
+                month = date.getMonth() + 1,
+                day = date.getDate(),
+                hour = date.getHours(),
+                minute = date.getMinutes(),
+                second = date.getSeconds();
+
+            month = stringUtils.padLeft(month, '0', 2);
+            day = stringUtils.padLeft(day, '0', 2);
+            hour = stringUtils.padLeft(hour, '0', 2);
+            minute = stringUtils.padLeft(minute, '0', 2);
+            second = stringUtils.padLeft(second, '0', 2);
+
+            return stringUtils.concat([year, month, day], '-') + ' ' + stringUtils.concat([hour, minute, second], ':');
+        };
+
+        /**
+         *
+         * @param {Date} date
+         * @returns {string}
+         */
+        this.toFrenchString = function toFrenchString(date) {
+            var stringUtils = GRA.utils.StringUtils,
+                year = date.getFullYear(),
+                month = date.getMonth() + 1,
+                day = date.getDate();
+
+            month = stringUtils.padLeft(month, '0', 2);
+            day = stringUtils.padLeft(day, '0', 2);
+
+            return stringUtils.concat([day, month, year], '/');
+        };
+
+        /**
+         *
+         * @param date
+         * @param withSeconds
+         * @returns {string}
+         */
+        this.toFullFrenchString = function toFullFrenchString(date, withSeconds) {
+            var frenchDate = this.toFrenchString(date),
+                stringUtils = GRA.utils.StringUtils,
+                hour = date.getHours(),
+                minute = date.getMinutes(),
+                second = date.getSeconds(),
+                parts = [],
+                useSeconds = !!withSeconds;
+
+            hour = stringUtils.padLeft(hour, '0', 2);
+            minute = stringUtils.padLeft(minute, '0', 2);
+
+            parts.push(hour, minute);
+            if (useSeconds) {
+                second = stringUtils.padLeft(second, '0', 2);
+                parts.push(second);
+            }
+
+            return frenchDate + ' ' + stringUtils.concat(parts, ':');
+        };
+
+        /**
+         *
+         * @returns {Date}
+         */
+        this.today = function today() {
+            return new Date();
+        };
+
+        /**
+         *
+         * @returns {Date}
+         */
+        this.tomorrow = function tomorrow() {
+            var today = this.today();
+
+            return this.add(today, 'days', 1);
+        };
+
+        /**
+         * 
+         * @param date
+         * @returns {number}
+         */
+        this.weekNumber = function weekNumber(date) {
+            var target = new Date(+date),
+                targetDay,
+                targetDate,
+                targetYear = target.getFullYear(),
+                firstWeek = new Date(targetYear, 0, 4),
+                targetTime,
+                firstWeekTime = +firstWeek,
+                firstWeekDay = firstWeek.getDay(),
+                timeDiff,
+                dayDiff;
+
+            target.setHours(0, 0, 0, 0);
+            targetDay = target.getDay();
+            targetDate = target.getDate();
+
+            target.setDate(targetDate + 3 - (targetDay + 6) % 7);
+            targetTime = +target;
+
+            timeDiff = targetTime - firstWeekTime / 86400000;
+            dayDiff = 3 - (firstWeekDay + 6) % 7;
+
+            return 1 + Math.round((timeDiff - dayDiff) / 7);
+        };
+
+        /**
+         *
+         * @returns {Date}
+         */
+        this.yesterday = function yesterday() {
+            var today = this.today();
+
+            return this.sub(today, 'days', 1);
+        };
+    };
+
+    GRA.utils.DateUtils = new GRA.utils.DateUtils();
+
+}(GRA || {}));</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	© 2016 - D'oria Antony - Powered by ink-docstrap
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 24/05/2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>
