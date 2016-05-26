@@ -77,7 +77,7 @@
                     value = this.value;
 
                 if (model) {
-                    model.dispatch('form.field.update', [modelProperty, value]);
+                    model.attribute(modelProperty, value);
                 }
 
                 if (validator.validate(value, rules)) {
@@ -110,7 +110,7 @@
                 var value = this.value;
 
                 if (model) {
-                    model.dispatch('form.field.update', [modelProperty, value]);
+                    model.attribute(modelProperty, value);
                 }
 
                 if (value === nullValue) {

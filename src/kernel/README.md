@@ -80,7 +80,9 @@ Une application peut envoyer un message grâce aux méthodes :
 * `broadcast(message)` où __message__ est une instance de la classe `GRA.kernel.Message`
 
 Alors que `sendTo` envoie le message à une seule application, la méthode `broadcast` envoie le message à toutes les applications du
-`Kernel`.
+`Kernel`.  
+Pour créer un message, il faut soit créer une nouvelle instance de `GRA.kernel.Message`, 
+soit passer par la méthode `createMessage(code, description)` de la classe `GRA.kernel.Application`.
 
 ### Démarrer des applications
 Une fois les applications bootées, il faut les démarrer. Pour cela, il y a deux façons :

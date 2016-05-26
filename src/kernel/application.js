@@ -37,6 +37,17 @@
             };
 
             /**
+             * Permet de créer un message
+             *
+             * @param {Number} requestCode Code de la requête
+             * @param {String} description Description du message
+             * @returns {GRA.kernel.Message} Instance de Message
+             */
+            this.createMessage = function createMessage(requestCode, description) {
+                return new GRA.kernel.Message(requestCode, description || '');
+            };
+
+            /**
              *
              * @param {string} event
              * @param {*} param

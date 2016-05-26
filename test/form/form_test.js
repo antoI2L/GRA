@@ -34,7 +34,7 @@ QUnit.test("Lier un Model à un formulaire", function (assert) {
         form = new GRA.form.Form();
 
     model.defineBy({
-        'a': '',
+        'a': 'testA',
         'b': ''
     });
 
@@ -66,30 +66,21 @@ QUnit.test("Lier un Model à un formulaire", function (assert) {
     form.addSelect('b', '#field-2', '');
     form.setModel(model);
 
-    model.attribute('a', 'test');
-    model.attribute('b', 'Test');
+    model.persist();
 
-    assert.equal('test', $('#field-1').val(), "Le champ texte doit contenir 'test'");
-    assert.ok($('#field-1').hasClass('success'), "Le champ texte doit avoir la classe 'success'");
-    assert.equal('Test', $('#field-2').val(), "La liste déroulante doit contenir 'Test'");
-    assert.ok($('#field-2').hasClass('success'), "La liste déroulante doit avoir la classe 'success'");
-    assert.ok(form.isValid(), "Le formulaire doit être valide");
-    assert.notOk(form.validator.hasErrors(), "Le Validator du formulaire ne doit pas contenir d'erreur");
-
-    model.attribute('a', '');
-    assert.equal('', $('#field-1').val(), "Le champ texte doit contenir ''");
-    assert.ok($('#field-1').hasClass('error'), "Le champ texte doit avoir la classe 'error'");
-    assert.equal("non-vide", $('#field-1').data('error'), "Le champ texte doit avoir la bonne erreur");
+    model.retrieve();
+    assert.equal('testA', $('#field-1').val(), "Le champ texte doit avoir comme valeur 'testA'");
+    assert.ok($('#field-1').hasClass('success'), "Le champ texte doit être correct");
+    assert.equal('', $('#field-2').val(), "La liste déroulante doit avoir comme valeur ''");
+    assert.ok($('#field-2').hasClass('error'), "La liste déroulante doit être incorrecte");
     assert.notOk(form.isValid(), "Le formulaire ne doit pas être valide");
 
-    model.attribute('a', 'ok');
-    model.attribute('b', '');
-
-    assert.ok($('#field-2').hasClass('error'), "La liste déroulante doit avoir la classe 'error'");
-    assert.notOk(form.isValid(), "Le formulaire ne doit pas être valide");
-    assert.notOk(form.validator.hasErrors(), "Le Validator du formulaire ne doit pas contenir d'erreur");
-
     model.attribute('b', 'Test');
+    model.persist();
+    model.retrieve();
+
+    assert.ok($('#field-2').hasClass('success'), "La liste déroulante doit être correcte");
     assert.ok(form.isValid(), "Le formulaire doit être valide");
-    assert.notOk(form.validator.hasErrors(), "Le Validator du formulaire ne doit pas contenir d'erreur");
+
+    model.clear();
 });

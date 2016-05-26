@@ -358,7 +358,7 @@
          */
         this.prepare = function prepare(source, callbackSuccess) {
             if (source) {
-                if (GRA.utils.is.func(source)) {
+                if (GRA.utils.is.callable(source)) {
                     this.onSuccess(source);
                 } else {
                     this.setUrl(source);
@@ -2245,7 +2245,7 @@
                     value = this.value;
 
                 if (model) {
-                    model.dispatch('form.field.update', [modelProperty, value]);
+                    model.attribute(modelProperty, value);
                 }
 
                 if (validator.validate(value, rules)) {
@@ -2278,7 +2278,7 @@
                 var value = this.value;
 
                 if (model) {
-                    model.dispatch('form.field.update', [modelProperty, value]);
+                    model.attribute(modelProperty, value);
                 }
 
                 if (value === nullValue) {
@@ -2541,7 +2541,7 @@
             if (GRA.utils.ObjectUtils.isAnonymous(callback)) {
                 anonymousLength += 1;
             } else {
-                callbackName = window.utils.ObjectUtils.getFunctionName(callback);
+                callbackName = GRA.utils.ObjectUtils.getFunctionName(callback);
             }
 
             callbacks.put(callbackName, {
@@ -2579,7 +2579,7 @@
         this.runAfter = function runAfter(delay, callbackName) {
             var callbackInfo;
 
-            if (GRA.utils.is.func(callbackName)) {
+            if (GRA.utils.is.callable(callbackName)) {
                 setTimeout(callbackName, delay * timeUnit);
             } else if (this.has(callbackName)) {
                 callbackInfo = callbacks.get(callbackName);
@@ -2600,7 +2600,7 @@
         this.runAsync = function runAsync(callback) {
             var callbackInfo;
 
-            if (GRA.utils.is.func(callback)) {
+            if (GRA.utils.is.callable(callback)) {
                 setTimeout(callback, 5);
             } else if (this.has(callback)) {
                 callbackInfo = callbacks.get(callback);
@@ -2903,6 +2903,17 @@
              */
             this.broadcast = function broadcast(message) {
                 bus.notifyAll(message);
+            };
+
+            /**
+             * Permet de créer un message
+             *
+             * @param {Number} requestCode Code de la requête
+             * @param {String} description Description du message
+             * @returns {GRA.kernel.Message} Instance de Message
+             */
+            this.createMessage = function createMessage(requestCode, description) {
+                return new GRA.kernel.Message(requestCode, description || '');
             };
 
             /**
@@ -3625,11 +3636,7 @@
                 }
             },
             events = {};
-
-        events['form.field.update'] = function (params) {
-            attr[params[0]] = params[1];
-        };
-
+        
         /**
          *
          * @param form
@@ -3654,7 +3661,6 @@
 
             if (attributeValue !== undefined) {
                 attr[attribute] = attributeValue;
-                dispatchFormEvent(attribute);
                 value = this;
             }
 
@@ -4515,7 +4521,7 @@
 
             return firstCond && secondCond;
         },
-        func: function func(variable) {
+        callable: function callable(variable) {
             var firstCond = variable && variable.constructor,
                 secondCond = variable.call && variable.apply;
 
@@ -4669,7 +4675,7 @@
         this.extend = function extend(childObject, parentObject) {
             var property;
 
-            if (GRA.utils.is.func(parentObject)) {
+            if (GRA.utils.is.callable(parentObject)) {
                 parentObject.apply(childObject);
             } else {
                 for (property in parentObject) {

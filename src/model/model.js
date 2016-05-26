@@ -33,11 +33,7 @@
                 }
             },
             events = {};
-
-        events['form.field.update'] = function (params) {
-            attr[params[0]] = params[1];
-        };
-
+        
         /**
          *
          * @param form
@@ -62,7 +58,6 @@
 
             if (attributeValue !== undefined) {
                 attr[attribute] = attributeValue;
-                dispatchFormEvent(attribute);
                 value = this;
             }
 
