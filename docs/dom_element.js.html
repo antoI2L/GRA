@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Librairie GRA.js Classes</title>
+	<title>Librairie GRA.js Source: dom/element.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,190 +65,318 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Classes</h1>
+		<h1 class="page-title">Source: dom/element.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">(function (GRA) {
 
-<header>
-    
-        <h2>
-        
-        </h2>
-        
-    
-</header>
+    GRA.dom = GRA.dom || {};
 
+    /**
+     *
+     * @constructor
+     */
+    GRA.dom.Element = function Element() {
 
-<article>
-    <div class="container-overview">
-    
-        
+        var element = document;
 
-        
-<dl class="details">
-    
+        /**
+         *
+         * @param className
+         */
+        this.addClass = function addClass(className) {
+            if (!GRA.utils.StringUtils.has(className, element.className)) {
+                element.className += ' ' + className;
+            }
+        };
 
-	
+        /**
+         *
+         * @param html
+         */
+        this.after = function after(html) {
+            element.insertAdjacentHTML('afterend', html);
+        };
 
-	
+        /**
+         *
+         * @param html
+         */
+        this.append = function append(html) {
+            element.insertAdjacentHTML('beforeend', html);
+        };
 
-	
+        /**
+         *
+         * @param html
+         */
+        this.before = function before(html) {
+            element.insertAdjacentHTML('beforebegin', html);
+        };
 
-    
+        /**
+         *
+         * @returns {Node}
+         */
+        this.clone = function clone() {
+            return element.cloneNode(true);
+        };
 
-    
+        /**
+         *
+         * @param child
+         * @returns {boolean|*}
+         */
+        this.contains = function contains(child) {
+            return element !== child &amp;&amp; element.contains(child);
+        };
 
-    
+        /**
+         *
+         * @param htmlElement
+         */
+        this.decorate = function decorate(htmlElement) {
+            element = htmlElement;
+        };
 
-    
+        /**
+         *
+         * @param callback
+         */
+        this.each = function each(callback) {
+            callback(element);
+        };
 
-	
+        /**
+         *
+         */
+        this.empty = function empty() {
+            element.innerHTML = '';
+        };
 
-	
+        /**
+         *
+         * @returns {boolean}
+         */
+        this.isEmpty = function isEmpty() {
+            return '' === element.innerHTML;
+        };
 
-	
+        /**
+         *
+         * @param attributeName
+         * @returns {*|*|string|string}
+         */
+        this.getAttribute = function getAttribute(attributeName) {
+            return element.getAttribute(attributeName);
+        };
 
-	
+        /**
+         *
+         * @param name
+         * @returns {*|*|string|string}
+         */
+        this.getData = function getData(name) {
+            return this.getAttribute('data-' + name);
+        };
 
-	
+        /**
+         *
+         * @returns {*|HTMLDocument}
+         */
+        this.getElementDecorated = function getElementDecorated() {
+            return element;
+        };
 
+        /**
+         *
+         * @returns {string|*}
+         */
+        this.getHtml = function getHtml() {
+            return element.innerHTML;
+        };
 
+        /**
+         *
+         * @returns {*}
+         */
+        this.getText = function getText() {
+            return element.textContent;
+        };
 
-	
+        /**
+         *
+         * @returns {GRA.dom.Element}
+         */
+        this.getParent = function getParent() {
+            element = element.parentNode;
 
-	
+            return this;
+        };
 
-	
+        /**
+         *
+         * @returns {{left: (number|Number), top: (number|Number)}}
+         */
+        this.getPosition = function getPosition() {
+            return {
+                left: element.offsetLeft,
+                top: element.offsetTop
+            };
+        };
 
-	
-</dl>
+        /**
+         *
+         * @returns {ClientRect}
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            return element.getBoundingClientRect();
+        };
 
+        /**
+         *
+         * @param className
+         * @returns {boolean}
+         */
+        this.hasClass = function hasClass(className) {
+            var regex = new RegExp('(^| )' + className + '( |$)', 'gi');
 
-        
-    
-    </div>
+            return regex.test(element.className);
+        };
 
-    
+        /**
+         *
+         */
+        this.hide = function hide() {
+            element.style.display = 'none';
+        };
 
-    
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.off = function off(eventName, callback) {
+            element.removeEventListener(eventName, callback);
+        };
 
-    
-        <h3 class="subsection-title">Classes</h3>
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.on = function on(eventName, callback) {
+            element.addEventListener(eventName, callback);
+        };
 
-        <dl>
-            <dt><a href="GRA.ajax.Ajax.html">Ajax</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.ajax.Factory.html">Factory</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.BinarySearchTree.html">BinarySearchTree</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Map.html">Map</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Queue.html">Queue</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Queue-QueueIterator.html">QueueIterator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Stack.html">Stack</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Vector.html">Vector</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Vector-VectorIterator.html">VectorIterator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Collection.html">Collection</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Element.html">Element</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Finder.html">Finder</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.JQueryProxy.html">JQueryProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.ExecutionQueue.html">ExecutionQueue</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.Manager.html">Manager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.Promise.html">Promise</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.form.Form.html">Form</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.form.Validator.html">Validator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Application.html">Application</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Bus.html">Bus</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Kernel.html">Kernel</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Message.html">Message</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.model.Model.html">Model</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.storage.local.html">local</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.storage.session.html">session</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.ArrayUtils.html">ArrayUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.DateUtils.html">DateUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.is.html">is</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.ObjectUtils.html">ObjectUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.StringUtils.html">StringUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.TokenUtils.html">TokenUtils</a></dt>
-            <dd></dd>
-        </dl>
-    
+        /**
+         *
+         * @param html
+         */
+        this.prepend = function prepend(html) {
+            element.insertBefore(html, element.firstChild);
+        };
 
-    
+        /**
+         *
+         */
+        this.remove = function remove() {
+            element.parentNode.removeChild(element);
+            element = document;
+        };
 
-    
+        /**
+         *
+         * @param className
+         */
+        this.removeClass = function removeClass(className) {
+            var toArray = className.split(' '),
+                toRegex = toArray.join('|'),
+                regex = new RegExp('(^|\\b)' + toRegex + '(\\b|$)', 'gi');
 
-    
+            element.className = element.className.replace(regex, ' ');
+        };
 
-    
+        /**
+         *
+         * @param attributeName
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            element.removeAttribute(attributeName);
+        };
 
-    
+        /**
+         *
+         * @param name
+         */
+        this.removeData = function removeData(name) {
+            this.removeAttribute('data-' + name);
+        };
 
-    
-</article>
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            element.setAttribute(attributeName, attributeValue);
+        };
 
+        /**
+         *
+         * @param name
+         * @param value
+         */
+        this.setData = function setDate(name, value) {
+            element.setAttribute('data-' + name, value);
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.setHtml = function setHtml(html) {
+            element.innerHTML = html;
+        };
+
+        /**
+         *
+         * @param text
+         */
+        this.setText = function setText(text) {
+            element.textContent = text;
+        };
+
+        /**
+         *
+         */
+        this.show = function show() {
+            element.style.display = '';
+        };
+
+        /**
+         * 
+         * @param eventName
+         */
+        this.trigger = function trigger(eventName) {
+            var event = document.createEvent('HTMLEvents');
+
+            event.initEvent(eventName, true, false);
+            element.dispatchEvent(event);
+        };
+    };
+
+}(GRA || {}));</pre>
+    </article>
 </section>
+
 
 
 
@@ -258,10 +386,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

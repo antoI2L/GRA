@@ -522,192 +522,6 @@
     };
 
     GRA.ajax.Factory = new GRA.ajax.Factory();
-}(GRA || {}));/**
- * Fichier src/datastructure/linkedlist.js
- *
- * @author D'oria Antony
- * @package GRA.datastructure
- * @version 1.0
- */
-(function (GRA) {
-
-    GRA.datastructure = GRA.datastructure || {};
-
-    /**
-     * Classe LinkedList
-     *
-     * @constructor
-     */
-    GRA.datastructure.LinkedList = function LinkedList() {
-        var length = 0,
-            head;
-
-        /**
-         * Permet d'ajouter une valeur à la liste
-         *
-         * @param {*} value Valeur à ajouter
-         * @returns {Node} Element ajouté à la liste
-         */
-        this.add = function add(value) {
-            var node = {
-                    value: value,
-                    next: null
-                },
-                currentNode = head;
-
-            if (head) {
-                while (currentNode.next) {
-                    currentNode = currentNode.next;
-                }
-
-                currentNode.next = node;
-            } else {
-                head = node;
-            }
-            length += 1;
-
-            return node;
-        };
-
-        /**
-         * Permet d'appliquer une fonction sur chaque élément de la liste
-         * La valeur de l'élément courant sera passé en paramètre de la fonction
-         *
-         * @param {function} callback Fonction à appliquer sur chaque élément de la liste
-         */
-        this.forEach = function forEach(callback) {
-            var currentNode = head;
-
-            while (currentNode.next) {
-                callback(currentNode.value);
-                currentNode = currentNode.next;
-            }
-        };
-
-        /**
-         * Permet de retourner l'élément à l'indice fourni en paramètre
-         *
-         * @param {number} index Indice de l'élément
-         * @returns {Node} Element de la liste
-         */
-        this.get = function get(index) {
-            var currentNode = head,
-                len = 0,
-                element;
-
-            if (0 > index || index > this.size()) {
-                element = null;
-            } else if (0 === index) {
-                element = head;
-            } else {
-                while (len < index) {
-                    currentNode = currentNode.next;
-                    len += 1;
-                }
-
-                element = currentNode;
-            }
-
-            return element.value;
-        };
-
-        /**
-         * Permet de retourner le premier élément de la liste
-         *
-         * @returns {Node} Tête de la liste
-         */
-        this.getFirst = function getFirst() {
-            return head.value;
-        };
-
-        /**
-         * Permet de retourner la tête de la liste
-         *
-         * @returns {Node} Tête de la liste
-         */
-        this.getHead = function getHead() {
-            return head;
-        };
-
-        /**
-         * Permet de retourner le dernier élément de la liste
-         *
-         * @returns {Node} Dernier élément de la liste
-         */
-        this.getLast = function getLast() {
-            var currentNode = head,
-                lastElement;
-
-            if (this.isEmpty()) {
-                lastElement = null;
-            } else if (1 === this.size()) {
-                lastElement = head;
-            } else {
-                while (currentNode.next) {
-                    currentNode = currentNode.next;
-                }
-
-                lastElement = currentNode;
-            }
-
-            return lastElement.value;
-        };
-
-        /**
-         * Permet de savoir si la liste est vide
-         *
-         * @returns {boolean} TRUE si la liste est vide, FALSE sinon
-         */
-        this.isEmpty = function isEmpty() {
-            return 0 === this.size();
-        };
-
-        /**
-         * Permet de supprimer l'élément dont la position est fournie en paramètre
-         *
-         * @param {number} index Position de l'élément à supprimer
-         * @return {boolean} Résultat de la suppression
-         */
-        this.removeAt = function removeAt(index) {
-            var currentNode = head,
-                position = 0,
-                beforeNode,
-                nodeToDelete,
-                deletedNode;
-
-            if (0 > index || index > this.size()) {
-                deletedNode = false;
-            } else if (0 === index) {
-                head = currentNode.next;
-                deletedNode = true;
-                //currentNode = null;
-                length -= 1;
-            } else {
-                while (position < index) {
-                    beforeNode = currentNode;
-                    nodeToDelete = currentNode.next;
-                    position += 1;
-                }
-
-                beforeNode.next = nodeToDelete.next;
-                deletedNode = true;
-                nodeToDelete = null;
-                length -= 1;
-            }
-
-            return deletedNode;
-        };
-
-        /**
-         * Permet de retourner la taille de la liste chaînée
-         *
-         * @returns {number} Taille de la liste
-         */
-        this.size = function size() {
-            return length;
-        };
-    };
-
 }(GRA || {}));(function (GRA) {
 
     GRA.datastructure = GRA.datastructure || {};
@@ -1815,6 +1629,1092 @@
     GRA.dom = GRA.dom || {};
 
     /**
+     *
+     * @constructor
+     */
+    GRA.dom.Collection = function Collection() {
+
+        var elements = [],
+            handler = new GRA.dom.Element(),
+            arrayUtils = GRA.utils.ArrayUtils;
+
+        /**
+         *
+         * @param className
+         */
+        this.addClass = function addClass(className) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.addClass(className);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.after = function after(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.after(html);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.append = function append(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.append(html);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.before = function before(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.before(html);
+            });
+        };
+
+        /**
+         *
+         * @param htmlElements
+         */
+        this.decorate = function decorate(htmlElements) {
+            elements = htmlElements;
+        };
+
+        /**
+         *
+         * @param callback
+         */
+        this.each = function each(callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                callback(handler);
+            });
+        };
+
+        /**
+         *
+         */
+        this.empty = function empty() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.empty();
+            });
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @returns {Array}
+         */
+        this.getAttribute = function getAttribute(attributeName) {
+            var attributes = [],
+                attribute;
+
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                attribute = handler.getAttribute(attributeName);
+                attributes.push(attribute);
+            });
+
+            return attributes;
+        };
+
+        /**
+         *
+         * @param name
+         * @returns {Array}
+         */
+        this.getData = function getData(name) {
+            return this.getAttribute('data-' + name);
+        };
+
+        /**
+         *
+         * @returns {string}
+         */
+        this.getHtml = function getHtml() {
+            var html = [],
+                part;
+
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                part = handler.getHtml();
+                html.push(part);
+            });
+
+            return html.join(' ');
+        };
+
+        /**
+         *
+         * @returns {string}
+         */
+        this.getText = function getText() {
+            var text = [],
+                part;
+
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                part = handler.getText();
+                text.push(part);
+            });
+
+            return text.join(' ');
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getParent = function getParent() {
+            var parent = null;
+
+            if (0 < elements.length) {
+                handler.decorate(elements[0]);
+                parent = handler.getParent();
+            }
+
+            return parent;
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getPosition = function getPosition() {
+            var position = null;
+
+            if (0 < elements.length) {
+                handler.decorate(elements[0]);
+                position = handler.getPosition();
+            }
+
+            return position;
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            var position = null;
+
+            if (0 < elements.length) {
+                handler.decorate(elements[0]);
+                position = handler.getPositionRelative();
+            }
+
+            return position;
+        };
+
+        /**
+         *
+         * @returns {boolean}
+         */
+        this.hasClass = function hasClass() {
+            return false;
+        };
+
+        /**
+         *
+         */
+        this.hide = function hide() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.hide();
+            });
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.off = function off(eventName, callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.off(eventName, callback);
+            });
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.on = function on(eventName, callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.on(eventName, callback);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.prepend = function prepend(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.prepend(html);
+            });
+        };
+
+        /**
+         *
+         */
+        this.remove = function remove() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.remove();
+            });
+
+            elements = [];
+        };
+
+        /**
+         *
+         * @param attributeName
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.removeAttribute(attributeName);
+            });
+        };
+
+        /**
+         *
+         * @param className
+         */
+        this.removeClass = function removeClass(className) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.removeClass(className);
+            });
+        };
+
+        /**
+         *
+         * @param name
+         */
+        this.removeData = function removeData(name) {
+            this.removeAttribute('data-' + name);
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setAttribute(attributeName, attributeValue);
+            });
+        };
+
+        /**
+         *
+         * @param name
+         * @param value
+         */
+        this.setData = function setData(name, value) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setData(name, value);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.setHtml = function setHtml(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setHtml(html);
+            });
+        };
+
+        /**
+         *
+         * @param text
+         */
+        this.setText = function setText(text) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setText(text);
+            });
+        };
+
+        /**
+         *
+         */
+        this.show = function show() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.show();
+            });
+        };
+
+        /**
+         * 
+         * @param eventName
+         */
+        this.trigger = function trigger(eventName) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.trigger(eventName);
+            });
+        };
+    };
+
+}(GRA || {}));(function (GRA) {
+
+    GRA.dom = GRA.dom || {};
+
+    /**
+     *
+     * @constructor
+     */
+    GRA.dom.Element = function Element() {
+
+        var element = document;
+
+        /**
+         *
+         * @param className
+         */
+        this.addClass = function addClass(className) {
+            if (!GRA.utils.StringUtils.has(className, element.className)) {
+                element.className += ' ' + className;
+            }
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.after = function after(html) {
+            element.insertAdjacentHTML('afterend', html);
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.append = function append(html) {
+            element.insertAdjacentHTML('beforeend', html);
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.before = function before(html) {
+            element.insertAdjacentHTML('beforebegin', html);
+        };
+
+        /**
+         *
+         * @returns {Node}
+         */
+        this.clone = function clone() {
+            return element.cloneNode(true);
+        };
+
+        /**
+         *
+         * @param child
+         * @returns {boolean|*}
+         */
+        this.contains = function contains(child) {
+            return element !== child && element.contains(child);
+        };
+
+        /**
+         *
+         * @param htmlElement
+         */
+        this.decorate = function decorate(htmlElement) {
+            element = htmlElement;
+        };
+
+        /**
+         *
+         * @param callback
+         */
+        this.each = function each(callback) {
+            callback(element);
+        };
+
+        /**
+         *
+         */
+        this.empty = function empty() {
+            element.innerHTML = '';
+        };
+
+        /**
+         *
+         * @returns {boolean}
+         */
+        this.isEmpty = function isEmpty() {
+            return '' === element.innerHTML;
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @returns {*|*|string|string}
+         */
+        this.getAttribute = function getAttribute(attributeName) {
+            return element.getAttribute(attributeName);
+        };
+
+        /**
+         *
+         * @param name
+         * @returns {*|*|string|string}
+         */
+        this.getData = function getData(name) {
+            return this.getAttribute('data-' + name);
+        };
+
+        /**
+         *
+         * @returns {*|HTMLDocument}
+         */
+        this.getElementDecorated = function getElementDecorated() {
+            return element;
+        };
+
+        /**
+         *
+         * @returns {string|*}
+         */
+        this.getHtml = function getHtml() {
+            return element.innerHTML;
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getText = function getText() {
+            return element.textContent;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Element}
+         */
+        this.getParent = function getParent() {
+            element = element.parentNode;
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {{left: (number|Number), top: (number|Number)}}
+         */
+        this.getPosition = function getPosition() {
+            return {
+                left: element.offsetLeft,
+                top: element.offsetTop
+            };
+        };
+
+        /**
+         *
+         * @returns {ClientRect}
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            return element.getBoundingClientRect();
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {boolean}
+         */
+        this.hasClass = function hasClass(className) {
+            var regex = new RegExp('(^| )' + className + '( |$)', 'gi');
+
+            return regex.test(element.className);
+        };
+
+        /**
+         *
+         */
+        this.hide = function hide() {
+            element.style.display = 'none';
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.off = function off(eventName, callback) {
+            element.removeEventListener(eventName, callback);
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.on = function on(eventName, callback) {
+            element.addEventListener(eventName, callback);
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.prepend = function prepend(html) {
+            element.insertBefore(html, element.firstChild);
+        };
+
+        /**
+         *
+         */
+        this.remove = function remove() {
+            element.parentNode.removeChild(element);
+            element = document;
+        };
+
+        /**
+         *
+         * @param className
+         */
+        this.removeClass = function removeClass(className) {
+            var toArray = className.split(' '),
+                toRegex = toArray.join('|'),
+                regex = new RegExp('(^|\\b)' + toRegex + '(\\b|$)', 'gi');
+
+            element.className = element.className.replace(regex, ' ');
+        };
+
+        /**
+         *
+         * @param attributeName
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            element.removeAttribute(attributeName);
+        };
+
+        /**
+         *
+         * @param name
+         */
+        this.removeData = function removeData(name) {
+            this.removeAttribute('data-' + name);
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            element.setAttribute(attributeName, attributeValue);
+        };
+
+        /**
+         *
+         * @param name
+         * @param value
+         */
+        this.setData = function setDate(name, value) {
+            element.setAttribute('data-' + name, value);
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.setHtml = function setHtml(html) {
+            element.innerHTML = html;
+        };
+
+        /**
+         *
+         * @param text
+         */
+        this.setText = function setText(text) {
+            element.textContent = text;
+        };
+
+        /**
+         *
+         */
+        this.show = function show() {
+            element.style.display = '';
+        };
+
+        /**
+         * 
+         * @param eventName
+         */
+        this.trigger = function trigger(eventName) {
+            var event = document.createEvent('HTMLEvents');
+
+            event.initEvent(eventName, true, false);
+            element.dispatchEvent(event);
+        };
+    };
+
+}(GRA || {}));(function (GRA) {
+
+    GRA.dom = GRA.dom || {};
+
+    /**
+     *
+     * @constructor
+     */
+    GRA.dom.Finder = function Finder() {
+
+        var handlers = {
+                'element': new GRA.dom.Element(),
+                'collection': new GRA.dom.Collection()
+            },
+            handler = 'element',
+            setHandler = function setHandler(htmlElements) {
+                if (1 === htmlElements.length) {
+                    handlers.element.decorate(htmlElements[0]);
+                    handler = 'element';
+                } else {
+                    handlers.collection.decorate(htmlElements);
+                    handler = 'collection';
+                }
+            };
+
+        /****************/
+        /* Recherche    */
+        /****************/
+
+        /**
+         *
+         * @param selector
+         * @returns {number}
+         */
+        this.count = function count(selector) {
+            var from = handlers.element.getElementDecorated();
+
+            return from.querySelectorAll(selector).length;
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {number}
+         */
+        this.countByClass = function countByClass(className) {
+            var from = handlers.element.getElementDecorated();
+
+            return from.getElementsByClassName(className).length;
+        };
+
+        /**
+         *
+         * @param selector
+         * @returns {GRA.dom.Finder}
+         */
+        this.find = function find(selector) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElements = from.querySelectorAll(selector);
+
+            setHandler(htmlElements);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {GRA.dom.Finder}
+         */
+        this.findByClass = function findByClass(className) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElements = from.getElementsByClassName(className);
+
+            setHandler(htmlElements);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param id
+         * @returns {GRA.dom.Finder}
+         */
+        this.findById = function findById(id) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElement = from.getElementById(id);
+
+            handlers.element.decorate(htmlElement);
+            handler = 'element';
+
+            return this;
+        };
+
+        /**
+         *
+         * @param selector
+         * @returns {GRA.dom.Finder}
+         */
+        this.findOne = function findOne(selector) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElement = from.querySelector(selector);
+
+            handlers.element.decorate(htmlElement);
+            handler = 'element';
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.reset = function reset() {
+            return this.searchFromDocument();
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.searchFromBody = function searchFromBody() {
+            handlers.element.decorate(document.body);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.searchFromDocument = function searchFromDocument() {
+            handlers.element.decorate(document);
+
+            return this;
+        };
+
+
+        /****************/
+        /* Manipulation */
+        /****************/
+
+        /**
+         *
+         * @param className
+         * @returns {GRA.dom.Finder}
+         */
+        this.addClass = function addClass(className) {
+            handlers[handler].addClass(className);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.after = function after(html) {
+            handlers[handler].after(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.append = function append(html) {
+            handlers[handler].append(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.before = function before(html) {
+            handlers[handler].before(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param callback
+         * @returns {GRA.dom.Finder}
+         */
+        this.each = function each(callback) {
+            handlers[handler].each(callback);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.empty = function empty() {
+            handlers[handler].empty();
+
+            return this;
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         * @returns {*|string}
+         */
+        this.getAttribute = function getAttribute(attributeName, attributeValue) {
+            return handlers[handler].getAttribute(attributeName, attributeValue);
+        };
+
+        /**
+         *
+         * @param name
+         * @returns {string|*}
+         */
+        this.getData = function getData(name) {
+            return handlers[handler].getData(name);
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getHtml = function getHtml() {
+            return handlers[handler].getHtml();
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getText = function getText() {
+            return handlers[handler].getText();
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.getParent = function getParent() {
+            var parent = handlers[handler].getParent(),
+                elementDecorated = parent.getElementDecorated();
+            handler = 'element';
+            handlers[handler].decorate(elementDecorated);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {*|{top, left}|{left, top}}
+         */
+        this.getPosition = function getPosition() {
+            return handlers[handler].getPosition();
+        };
+
+        /**
+         *
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            return handlers[handler].getPositionRelative();
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {*}
+         */
+        this.hasClass = function hasClass(className) {
+            return handlers[handler].hasClass(className);
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.hide = function hide() {
+            handlers[handler].hide();
+
+            return this;
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         * @returns {GRA.dom.Finder}
+         */
+        this.off = function off(eventName, callback) {
+            handlers[handler].off(eventName, callback);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         * @returns {GRA.dom.Finder}
+         */
+        this.on = function on(eventName, callback) {
+            handlers[handler].on(eventName, callback);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.prepend = function prepend(html) {
+            handlers[handler].prepend(html);
+
+            return this;
+        };
+
+        /**
+         *
+         */
+        this.remove = function remove() {
+            handlers[handler].remove();
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            handlers[handler].removeAttribute(attributeName);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeClass = function removeClass(className) {
+            handlers[handler].removeClass(className);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param name
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeData = function removeData(name) {
+            handlers[handler].removeData(name);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         * @returns {GRA.dom.Finder}
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            handlers[handler].setAttribute(attributeName, attributeValue);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param name
+         * @param value
+         * @returns {GRA.dom.Finder}
+         */
+        this.setData = function setData(name, value) {
+            handlers[handler].setData(name, value);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.setHtml = function setHtml(html) {
+            handlers[handler].setHtml(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param text
+         * @returns {GRA.dom.Finder}
+         */
+        this.setText = function setText(text) {
+            handlers[handler].setText(text);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.show = function show() {
+            handlers[handler].show();
+
+            return this;
+        };
+
+        /**
+         * 
+         * @param eventName
+         * @returns {GRA.dom.Finder}
+         */
+        this.trigger = function trigger(eventName) {
+            handlers[handler].trigger(eventName);
+
+            return this;
+        };
+    };
+
+}(GRA || {}));(function (GRA) {
+
+    GRA.dom = GRA.dom || {};
+
+    /**
      * Classe JQueryProxy
      * Proxy de JQuery
      *
@@ -2431,12 +3331,12 @@
         this.run = function run(callback) {
             var queue = tasks.clone();
 
-            setTimeout(function () {
+            setTimeout(function execution() {
                 var task = queue.dequeue();
                 task.apply(null, parameters);
 
                 if (0 < queue.size()) {
-                    setTimeout(arguments.callee, 5);
+                    setTimeout(execution, 5);  //arguments.callee
                 } else {
                     callback();
                 }
@@ -2638,14 +3538,8 @@
 
             if ('loading' != document.readyState) {
                 toRun();
-            } else if (document.addEventListener) {
-                document.addEventListener('DOMContentLoaded', toRun);
             } else {
-                document.attachEvent('onreadystatechange', function () {
-                    if ('loading' != document.readyState) {
-                        toRun();
-                    }
-                });
+                document.addEventListener('DOMContentLoaded', toRun);
             }
         };
 

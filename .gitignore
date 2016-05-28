@@ -29,6 +29,9 @@ build/Release
 node_modules
 jspm_packages
 
+# Vendor
+vendor
+
 # Optional npm cache directory
 .npm
 

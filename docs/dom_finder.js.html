@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Librairie GRA.js Source: dom/jquery-wrapper.js</title>
+	<title>Librairie GRA.js Source: dom/finder.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,7 +70,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: dom/jquery-wrapper.js</h1>
+		<h1 class="page-title">Source: dom/finder.js</h1>
     
 <section>
     <article>
@@ -80,356 +80,432 @@
     GRA.dom = GRA.dom || {};
 
     /**
-     * Classe JQueryProxy
-     * Proxy de JQuery
      *
      * @constructor
      */
-    GRA.dom.JQueryProxy = function JQueryProxy() {
-        /**
-         * 
-         * @param className
-         * @param selector
-         * @returns {*}
-         */
-        this.addClass = function addClass(className, selector) {
-            var elements = $(selector);
-            return elements.addClass(className);
-        };
+    GRA.dom.Finder = function Finder() {
+
+        var handlers = {
+                'element': new GRA.dom.Element(),
+                'collection': new GRA.dom.Collection()
+            },
+            handler = 'element',
+            setHandler = function setHandler(htmlElements) {
+                if (1 === htmlElements.length) {
+                    handlers.element.decorate(htmlElements[0]);
+                    handler = 'element';
+                } else {
+                    handlers.collection.decorate(htmlElements);
+                    handler = 'collection';
+                }
+            };
+
+        /****************/
+        /* Recherche    */
+        /****************/
 
         /**
          *
-         * @param htmlElement
          * @param selector
-         * @returns {*}
-         */
-        this.append = function append(htmlElement, selector) {
-            var elements = $(selector);
-            return elements.append(htmlElement);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {number|jQuery}
+         * @returns {number}
          */
         this.count = function count(selector) {
-            return $(selector).length;
+            var from = handlers.element.getElementDecorated();
+
+            return from.querySelectorAll(selector).length;
         };
 
         /**
          *
-         * @param cssClass
-         * @returns {number|jQuery}
+         * @param className
+         * @returns {number}
          */
-        this.countByClass = function countByClass(cssClass) {
-            return $('.' + cssClass).length;
+        this.countByClass = function countByClass(className) {
+            var from = handlers.element.getElementDecorated();
+
+            return from.getElementsByClassName(className).length;
         };
 
         /**
          *
          * @param selector
-         * @returns {*|jQuery|HTMLElement}
+         * @returns {GRA.dom.Finder}
          */
         this.find = function find(selector) {
-            return $(selector);
+            var from = handlers.element.getElementDecorated(),
+                htmlElements = from.querySelectorAll(selector);
+
+            setHandler(htmlElements);
+
+            return this;
         };
 
         /**
          *
-         * @param cssClass
-         * @returns {*|jQuery|HTMLElement}
+         * @param className
+         * @returns {GRA.dom.Finder}
          */
-        this.findByClass = function findByClass(cssClass) {
-            return $('.' + cssClass);
+        this.findByClass = function findByClass(className) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElements = from.getElementsByClassName(className);
+
+            setHandler(htmlElements);
+
+            return this;
         };
 
         /**
          *
-         * @param selectorId
-         * @returns {*|jQuery|HTMLElement}
+         * @param id
+         * @returns {GRA.dom.Finder}
          */
-        this.findById = function findById(selectorId) {
-            return $('#' + selectorId);
+        this.findById = function findById(id) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElement = from.getElementById(id);
+
+            handlers.element.decorate(htmlElement);
+            handler = 'element';
+
+            return this;
         };
 
         /**
          *
          * @param selector
+         * @returns {GRA.dom.Finder}
+         */
+        this.findOne = function findOne(selector) {
+            var from = handlers.element.getElementDecorated(),
+                htmlElement = from.querySelector(selector);
+
+            handlers.element.decorate(htmlElement);
+            handler = 'element';
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.reset = function reset() {
+            return this.searchFromDocument();
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.searchFromBody = function searchFromBody() {
+            handlers.element.decorate(document.body);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.searchFromDocument = function searchFromDocument() {
+            handlers.element.decorate(document);
+
+            return this;
+        };
+
+
+        /****************/
+        /* Manipulation */
+        /****************/
+
+        /**
+         *
+         * @param className
+         * @returns {GRA.dom.Finder}
+         */
+        this.addClass = function addClass(className) {
+            handlers[handler].addClass(className);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.after = function after(html) {
+            handlers[handler].after(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.append = function append(html) {
+            handlers[handler].append(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.before = function before(html) {
+            handlers[handler].before(html);
+
+            return this;
+        };
+
+        /**
+         *
          * @param callback
+         * @returns {GRA.dom.Finder}
          */
-        this.forEach = function forEach(selector, callback) {
-            var elements = $(selector);
-            elements.each(callback);
+        this.each = function each(callback) {
+            handlers[handler].each(callback);
+
+            return this;
         };
 
         /**
          *
-         * @param attributeName
-         * @param selector
-         * @returns {*}
+         * @returns {GRA.dom.Finder}
          */
-        this.getAttribute = function getAttribute(attributeName, selector) {
-            var elements = $(selector);
-            return elements.attr(attributeName);
-        };
+        this.empty = function empty() {
+            handlers[handler].empty();
 
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.getChildren = function getChildren(selector) {
-            var elements = $(selector);
-            return elements.children();
-        };
-
-        /**
-         *
-         * @param dataKey
-         * @param selector
-         * @returns {*}
-         */
-        this.getData = function getData(dataKey, selector) {
-            var elements = $(selector);
-            return elements.data(dataKey);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.getHtml = function getHtml(selector) {
-            var elements = $(selector);
-            return elements.html();
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.getNodeName = function getNodeName(selector) {
-            return this.getProperty('tagName', selector);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*|{top, left}}
-         */
-        this.getOffset = function getOffset(selector) {
-            var elements = $(selector);
-            return elements.offset();
-        };
-
-        /**
-         *
-         * @param selector
-         * @param parentName
-         * @returns {*}
-         */
-        this.getParent = function getParent(selector, parentName) {
-            var elements = $(selector);
-            return elements.parent(parentName);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*|{top, left}}
-         */
-        this.getPosition = function getPosition(selector) {
-            var elements = $(selector);
-            return elements.position();
-        };
-
-        /**
-         *
-         * @param propertyName
-         * @param selector
-         * @returns {*}
-         */
-        this.getProperty = function getProperty(propertyName, selector) {
-            var elements = $(selector);
-            return elements.prop(propertyName);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.getText = function getText(selector) {
-            var elements = $(selector);
-            return elements.text();
-        };
-
-        /**
-         *
-         * @param input
-         * @returns {*}
-         */
-        this.getValue = function getValue(input) {
-            var elements = $(input);
-            return elements.val();
-        };
-
-        /**
-         *
-         * @param className
-         * @param selector
-         * @returns {*}
-         */
-        this.hasClass = function hasClass(className, selector) {
-            var elements = $(selector);
-            return elements.hasClass(className);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.hide = function hide(selector) {
-            var elements = $(selector);
-            return elements.hide();
-        };
-
-        /**
-         *
-         * @param inputCheckbox
-         * @returns {*}
-         */
-        this.isChecked = function isChecked(inputCheckbox) {
-            var elements = $(inputCheckbox);
-            return elements.is(':checked');
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.isVisible = function isVisible(selector) {
-            var elements = $(selector);
-            return elements.is(':visible');
-        };
-
-        /**
-         *
-         * @param htmlElement
-         * @param selector
-         * @returns {*}
-         */
-        this.prepend = function prepend(htmlElement, selector) {
-            var elements = $(selector);
-            return elements.prepend(htmlElement);
-        };
-
-        /**
-         *
-         * @param selector
-         * @returns {*}
-         */
-        this.remove = function remove(selector) {
-            var elements = $(selector);
-            return elements.remove();
-        };
-
-        /**
-         *
-         * @param className
-         * @param selector
-         * @returns {*}
-         */
-        this.removeClass = function removeClass(className, selector) {
-            var elements = $(selector);
-            return elements.removeClass(className);
+            return this;
         };
 
         /**
          *
          * @param attributeName
          * @param attributeValue
-         * @param selector
-         * @returns {*}
+         * @returns {*|string}
          */
-        this.setAttribute = function setAttribute(attributeName, attributeValue, selector) {
-            var elements = $(selector);
-            return elements.attr(attributeName, attributeValue);
+        this.getAttribute = function getAttribute(attributeName, attributeValue) {
+            return handlers[handler].getAttribute(attributeName, attributeValue);
         };
 
         /**
          *
-         * @param dataKey
-         * @param dataValue
-         * @param selector
-         * @returns {*}
+         * @param name
+         * @returns {string|*}
          */
-        this.setData = function setData(dataKey, dataValue, selector) {
-            var elements = $(selector);
-            return elements.data(dataKey, dataValue);
+        this.getData = function getData(name) {
+            return handlers[handler].getData(name);
         };
 
         /**
          *
-         * @param htmlContent
-         * @param selector
          * @returns {*}
          */
-        this.setHtml = function setHtml(htmlContent, selector) {
-            var elements = $(selector);
-            return elements.html(htmlContent);
+        this.getHtml = function getHtml() {
+            return handlers[handler].getHtml();
         };
 
         /**
          *
-         * @param propertyName
-         * @param propertyValue
-         * @param selector
          * @returns {*}
          */
-        this.setProperty = function setProperty(propertyName, propertyValue, selector) {
-            var elements = $(selector);
-            return elements.prop(propertyName, propertyValue);
+        this.getText = function getText() {
+            return handlers[handler].getText();
         };
 
         /**
          *
-         * @param textContent
-         * @param selector
-         * @returns {*}
+         * @returns {GRA.dom.Finder}
          */
-        this.setText = function setText(textContent, selector) {
-            var elements = $(selector);
-            return elements.text(textContent);
+        this.getParent = function getParent() {
+            var parent = handlers[handler].getParent(),
+                elementDecorated = parent.getElementDecorated();
+            handler = 'element';
+            handlers[handler].decorate(elementDecorated);
+
+            return this;
         };
 
         /**
          *
+         * @returns {*|{top, left}|{left, top}}
+         */
+        this.getPosition = function getPosition() {
+            return handlers[handler].getPosition();
+        };
+
+        /**
+         *
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            return handlers[handler].getPositionRelative();
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {*}
+         */
+        this.hasClass = function hasClass(className) {
+            return handlers[handler].hasClass(className);
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.hide = function hide() {
+            handlers[handler].hide();
+
+            return this;
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         * @returns {GRA.dom.Finder}
+         */
+        this.off = function off(eventName, callback) {
+            handlers[handler].off(eventName, callback);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         * @returns {GRA.dom.Finder}
+         */
+        this.on = function on(eventName, callback) {
+            handlers[handler].on(eventName, callback);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param html
+         * @returns {GRA.dom.Finder}
+         */
+        this.prepend = function prepend(html) {
+            handlers[handler].prepend(html);
+
+            return this;
+        };
+
+        /**
+         *
+         */
+        this.remove = function remove() {
+            handlers[handler].remove();
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            handlers[handler].removeAttribute(attributeName);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param className
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeClass = function removeClass(className) {
+            handlers[handler].removeClass(className);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param name
+         * @returns {GRA.dom.Finder}
+         */
+        this.removeData = function removeData(name) {
+            handlers[handler].removeData(name);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         * @returns {GRA.dom.Finder}
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            handlers[handler].setAttribute(attributeName, attributeValue);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param name
          * @param value
-         * @param input
-         * @returns {*}
+         * @returns {GRA.dom.Finder}
          */
-        this.setValue = function setValue(value, input) {
-            var elements = $(input);
-            return elements.val(value);
+        this.setData = function setData(name, value) {
+            handlers[handler].setData(name, value);
+
+            return this;
         };
 
         /**
          *
-         * @param selector
-         * @returns {*}
+         * @param html
+         * @returns {GRA.dom.Finder}
          */
-        this.show = function show(selector) {
-            var elements = $(selector);
-            return elements.show();
+        this.setHtml = function setHtml(html) {
+            handlers[handler].setHtml(html);
+
+            return this;
+        };
+
+        /**
+         *
+         * @param text
+         * @returns {GRA.dom.Finder}
+         */
+        this.setText = function setText(text) {
+            handlers[handler].setText(text);
+
+            return this;
+        };
+
+        /**
+         *
+         * @returns {GRA.dom.Finder}
+         */
+        this.show = function show() {
+            handlers[handler].show();
+
+            return this;
+        };
+
+        /**
+         * 
+         * @param eventName
+         * @returns {GRA.dom.Finder}
+         */
+        this.trigger = function trigger(eventName) {
+            handlers[handler].trigger(eventName);
+
+            return this;
         };
     };
-
-    GRA.dom.JQueryProxy = new GRA.dom.JQueryProxy();
 
 }(GRA || {}));</pre>
     </article>

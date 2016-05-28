@@ -27,12 +27,12 @@
         this.run = function run(callback) {
             var queue = tasks.clone();
 
-            setTimeout(function () {
+            setTimeout(function execution() {
                 var task = queue.dequeue();
                 task.apply(null, parameters);
 
                 if (0 < queue.size()) {
-                    setTimeout(arguments.callee, 5);
+                    setTimeout(execution, 5);  //arguments.callee
                 } else {
                     callback();
                 }

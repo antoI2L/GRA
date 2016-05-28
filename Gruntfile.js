@@ -44,6 +44,14 @@ module.exports = function (grunt) {
                     configure: "jsdoc.conf.json"
                 }
             }
+        },
+        exec: {
+            install_jquery: {
+                command: 'bower install jquery'
+            },
+            install_toastr: {
+                command: 'bower install toastr'
+            }
         }
     });
 
@@ -52,7 +60,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-exec');
 
+    grunt.registerTask('install', ['exec']);
     grunt.registerTask('test', ['jshint', 'qunit']);
     grunt.registerTask('minify', ['jshint', 'concat', 'uglify', 'jsdoc']);
     grunt.registerTask('dev', ['jshint', 'concat', 'qunit', 'jsdoc']);

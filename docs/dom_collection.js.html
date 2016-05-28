@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Librairie GRA.js Source: datastructure/map.js</title>
+	<title>Librairie GRA.js Source: dom/collection.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,214 +70,364 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: datastructure/map.js</h1>
+		<h1 class="page-title">Source: dom/collection.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">(function (GRA) {
 
-    GRA.datastructure = GRA.datastructure || {};
+    GRA.dom = GRA.dom || {};
 
     /**
-     * Classe Map
-     * Représente une map (dictionnaire clé-valeur)
      *
      * @constructor
      */
-    GRA.datastructure.Map = function Map() {
-        var data = Object.create(null),
-            length = 0;
+    GRA.dom.Collection = function Collection() {
+
+        var elements = [],
+            handler = new GRA.dom.Element(),
+            arrayUtils = GRA.utils.ArrayUtils;
 
         /**
-         * Permet d'appliquer une fonction sur chaque paire clé/valeur de la Map.
-         * La clé et la valeur seront passés en paramètre de la fonction.
          *
-         * @param {function} callback Fonction à appeler sur chaque clé/valeur de la Map
+         * @param className
          */
-        this.forEach = function forEach(callback) {
-            var property;
-
-            for (property in data) {
-                callback(property, data[property]);
-            }
+        this.addClass = function addClass(className) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.addClass(className);
+            });
         };
 
         /**
-         * Permet d'appliquer une fonction sur chaque clé de la Map
          *
-         * @param {function} callback Fonction à appliquer
+         * @param html
          */
-        this.forEachKey = function forEachKey(callback) {
-            var property;
-
-            for (property in data) {
-                callback(property);
-            }
+        this.after = function after(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.after(html);
+            });
         };
 
         /**
-         * Permet d'appliquer une fonction sur chaque valeur de la Map
          *
-         * @param {function} callback Fonction à appliquer
+         * @param html
          */
-        this.forEachValue = function forEachValue(callback) {
-            var property;
-
-            for (property in data) {
-                callback(data[property]);
-            }
+        this.append = function append(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.append(html);
+            });
         };
 
         /**
-         * Permet de vider la Map
+         *
+         * @param html
          */
-        this.clear = function clear() {
-            var key;
-
-            for (key in data) {
-                delete data[key];
-            }
-
-            length = 0;
+        this.before = function before(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.before(html);
+            });
         };
 
         /**
-         * Permet de savoir si la Map contient la clé passée en paramètre
          *
-         * @param {string} key Clé à rechercher
-         * @returns {boolean} TRUE si la clé est trouvée, FALSE sinon
+         * @param htmlElements
          */
-        this.containsKey = function containsKey(key) {
-            return GRA.utils.ObjectUtils.own(key, data);
+        this.decorate = function decorate(htmlElements) {
+            elements = htmlElements;
         };
 
         /**
-         * Permet de savoir si la Map contient la valeur passée en paramètre
          *
-         * @param {*} value Valeur à rechercher
-         * @returns {boolean} TRUE si la valeur est trouvée, FALSE sinon
+         * @param callback
          */
-        this.containsValue = function containsValue(value) {
-            var values = this.values();
-
-            return -1 !== GRA.utils.ArrayUtils.indexOf(value, values);
+        this.each = function each(callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                callback(handler);
+            });
         };
 
         /**
-         * Permet de retourner la valeur associée à la clé passée en paramètre
          *
-         * @param {string} key Clé dans laquelle se trouve la valeur
-         * @returns {*} Valeur contenue dans la clé
          */
-        this.get = function get(key) {
-            return data[key];
+        this.empty = function empty() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.empty();
+            });
         };
 
         /**
-         * Permet de savoir si la Map est vide ou non
          *
-         * @returns {boolean} TRUE si la Map est vide, FALSE sinon
+         * @param attributeName
+         * @returns {Array}
          */
-        this.isEmpty = function isEmpty() {
-            return 0 === length;
+        this.getAttribute = function getAttribute(attributeName) {
+            var attributes = [],
+                attribute;
+
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                attribute = handler.getAttribute(attributeName);
+                attributes.push(attribute);
+            });
+
+            return attributes;
         };
 
         /**
-         * Permet de retourner la liste des clés de la Map
          *
-         * @returns {Array} Liste des clés de la Map
+         * @param name
+         * @returns {Array}
          */
-        this.keys = function keys() {
-            var key,
-                keys = [];
-
-            for (key in data) {
-                keys.push(key);
-            }
-
-            return keys;
+        this.getData = function getData(name) {
+            return this.getAttribute('data-' + name);
         };
 
         /**
-         * Permet d'enregistrer une paire clé-valeur dans la Map
          *
-         * @param {string} key Clé dans laquelle sera contenue la valeur
-         * @param {*} value Valeur à insérer
+         * @returns {string}
          */
-        this.put = function put(key, value) {
-            data[key] = value;
-            length += 1;
+        this.getHtml = function getHtml() {
+            var html = [],
+                part;
+
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                part = handler.getHtml();
+                html.push(part);
+            });
+
+            return html.join(' ');
         };
 
         /**
-         * Permet d'enregistrer la liste des couples dans la Map
-         * Un couple est de la forme [clé, valeur]
-         * La liste des couples est de la forme [[clé, valeur], [clé, valeur]]
          *
-         * @param {Array} arrayOfCouple Liste des associations clé &lt;=> valeur
+         * @returns {string}
          */
-        this.putAll = function putAll(arrayOfCouple) {
-            var couple,
-                arrayLength = arrayOfCouple.length,
-                index;
+        this.getText = function getText() {
+            var text = [],
+                part;
 
-            for (index = 0; index &lt; arrayLength; index += 1) {
-                couple = arrayOfCouple[index];
-                this.put(couple[0], couple[1]);
-            }
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                part = handler.getText();
+                text.push(part);
+            });
+
+            return text.join(' ');
         };
 
         /**
-         * Permet de supprimer l'enregistrement dont la clé est passée en paramètre
          *
-         * @param {string} key Clé à supprimer
-         * @return {boolean} TRUE si l'élément a été supprimé, FALSE sinon
+         * @returns {*}
          */
-        this.remove = function remove(key) {
-            var removed = false;
+        this.getParent = function getParent() {
+            var parent = null;
 
-            if (this.containsKey(key)) {
-                delete data[key];
-                length -= 1;
-                removed = true;
+            if (0 &lt; elements.length) {
+                handler.decorate(elements[0]);
+                parent = handler.getParent();
             }
 
-            return removed;
+            return parent;
         };
 
         /**
-         * Retourne la taille de la Map
          *
-         * @returns {number} Taille de la map
+         * @returns {*}
          */
-        this.size = function size() {
-            return length;
-        };
+        this.getPosition = function getPosition() {
+            var position = null;
 
-        /**
-         * Permet de retourner la représentation textuelle (notation JSON) de la Map
-         *
-         * @returns {*|string} La représentation textuelle (notation JSON) de la Map
-         */
-        this.toString = function toStrong() {
-            return GRA.utils.ObjectUtils.stringify(data);
-        };
-        
-        /**
-         * Permet de retourner les valeurs contenues dans la Map
-         *
-         * @returns {Array} Liste des valeurs contenues dans la Map
-         */
-        this.values = function values() {
-            var key,
-                values = [];
-
-            for (key in data) {
-                values.push(data[key]);
+            if (0 &lt; elements.length) {
+                handler.decorate(elements[0]);
+                position = handler.getPosition();
             }
 
-            return values;
+            return position;
+        };
+
+        /**
+         *
+         * @returns {*}
+         */
+        this.getPositionRelative = function getPositionRelative() {
+            var position = null;
+
+            if (0 &lt; elements.length) {
+                handler.decorate(elements[0]);
+                position = handler.getPositionRelative();
+            }
+
+            return position;
+        };
+
+        /**
+         *
+         * @returns {boolean}
+         */
+        this.hasClass = function hasClass() {
+            return false;
+        };
+
+        /**
+         *
+         */
+        this.hide = function hide() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.hide();
+            });
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.off = function off(eventName, callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.off(eventName, callback);
+            });
+        };
+
+        /**
+         *
+         * @param eventName
+         * @param callback
+         */
+        this.on = function on(eventName, callback) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.on(eventName, callback);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.prepend = function prepend(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.prepend(html);
+            });
+        };
+
+        /**
+         *
+         */
+        this.remove = function remove() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.remove();
+            });
+
+            elements = [];
+        };
+
+        /**
+         *
+         * @param attributeName
+         */
+        this.removeAttribute = function removeAttribute(attributeName) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.removeAttribute(attributeName);
+            });
+        };
+
+        /**
+         *
+         * @param className
+         */
+        this.removeClass = function removeClass(className) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.removeClass(className);
+            });
+        };
+
+        /**
+         *
+         * @param name
+         */
+        this.removeData = function removeData(name) {
+            this.removeAttribute('data-' + name);
+        };
+
+        /**
+         *
+         * @param attributeName
+         * @param attributeValue
+         */
+        this.setAttribute = function setAttribute(attributeName, attributeValue) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setAttribute(attributeName, attributeValue);
+            });
+        };
+
+        /**
+         *
+         * @param name
+         * @param value
+         */
+        this.setData = function setData(name, value) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setData(name, value);
+            });
+        };
+
+        /**
+         *
+         * @param html
+         */
+        this.setHtml = function setHtml(html) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setHtml(html);
+            });
+        };
+
+        /**
+         *
+         * @param text
+         */
+        this.setText = function setText(text) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.setText(text);
+            });
+        };
+
+        /**
+         *
+         */
+        this.show = function show() {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.show();
+            });
+        };
+
+        /**
+         * 
+         * @param eventName
+         */
+        this.trigger = function trigger(eventName) {
+            arrayUtils.forEach(elements, function (element) {
+                handler.decorate(element);
+                handler.trigger(eventName);
+            });
         };
     };
 

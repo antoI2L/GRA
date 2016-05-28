@@ -169,14 +169,8 @@
 
             if ('loading' != document.readyState) {
                 toRun();
-            } else if (document.addEventListener) {
-                document.addEventListener('DOMContentLoaded', toRun);
             } else {
-                document.attachEvent('onreadystatechange', function () {
-                    if ('loading' != document.readyState) {
-                        toRun();
-                    }
-                });
+                document.addEventListener('DOMContentLoaded', toRun);
             }
         };
 
