@@ -524,6 +524,63 @@
     GRA.ajax.Factory = new GRA.ajax.Factory();
 }(GRA || {}));(function (GRA) {
 
+    GRA.component = GRA.component || {};
+
+    /**
+     *
+     * @constructor
+     */
+    GRA.component.BackToTop = function BackToTop() {
+
+        var selector = '#gra-back-to-top',
+            html = [
+                '<a id="gra-back-to-top" href="#" class="btn gra-button-bleu-edf btn-lg" role="button" title="Retour en haut de page" data-toggle="tooltip" data-placement="left">',
+                '<span class="glyphicon glyphicon-chevron-up"></span></a>'
+            ].join('');
+
+        /**
+         *
+         */
+        this.create = function create() {
+            var body = $('body'),
+                thisHtml = $('html'),
+                thisWindow = $(window),
+                backToTop;
+
+            body.append(html);
+            backToTop = $(selector);
+            backToTop.tooltip('show');
+
+            thisWindow.on('scroll', function () {
+                if (5 * 10 < thisWindow.scrollTop()) {
+                    backToTop.fadeIn();
+                }
+                else {
+                    backToTop.fadeOut();
+                }
+            });
+
+            backToTop.on('click', function (e) {
+                e.preventDefault();
+
+                backToTop.tooltip('hide');
+                thisHtml.animate({
+                    scrollTop: 0
+                }, 5 * 10 * 10);
+            });
+        };
+
+        /**
+         *
+         * @returns {string}
+         */
+        this.getCssSelector = function getCssSelector() {
+            return selector;
+        };
+    };
+
+}(GRA || {}));(function (GRA) {
+
     GRA.datastructure = GRA.datastructure || {};
 
     /**
@@ -3998,6 +4055,24 @@
     // Initialisation des namespaces
     GRA.kernel = GRA.kernel || {};
 
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "300",
+        "timeOut": "6000",
+        "extendedTimeOut": "1200",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
     /**
      * Classe KernelApi
      *
@@ -4168,6 +4243,7 @@
                     app.dispatch('boot');
                 } catch (e) {
                     internalLogger.error(e);
+                    toastr.error(e.message, "Erreur survenue");
                 }
             }
         };
@@ -4185,10 +4261,38 @@
          * Permet de créer une application
          *
          * @param {string} applicationName Nom de l'application à créer
-         * @returns {Application} L'Application créée
+         * @returns {GRA.kernel.Application} L'Application créée
          */
         this.createApplication = function createApplication(applicationName) {
             return new GRA.kernel.Application(applicationName);
+        };
+
+        /**
+         * Permet de créer un composant à partir de son nom.
+         *
+         * @param {String} componentName Nom du composant
+         * @returns {*}
+         */
+        this.createComponent = function createComponent(componentName) {
+            var component,
+                realComponentName,
+                stringUtils = GRA.utils.StringUtils;
+
+            if (GRA.component.hasOwnProperty(componentName)) {
+                component = new GRA.component[componentName]();
+                component.create();
+            } else if (stringUtils.has('-', componentName)) {
+                realComponentName = componentName.replace(/\-/g, ' ');
+                realComponentName = stringUtils.ucfirstAll(realComponentName);
+                realComponentName = realComponentName.replace(/\s/g, '');
+
+                if (GRA.component.hasOwnProperty(realComponentName)) {
+                    component = new GRA.component[realComponentName]();
+                    component.create();
+                }
+            }
+
+            return component;
         };
 
         /**
@@ -4233,11 +4337,10 @@
          * @param {string} level Niveau du message
          */
         this.notify = function notify(msg, level) {
-            //TODO: Méthode Kernel::notify()
             if ('success' === level) {
-                internalLogger.log(msg);
+                toastr.success(msg, "Information");
             } else {
-                internalLogger.info(msg);
+                toastr.info(msg, "Information");
             }
         };
 
@@ -4257,8 +4360,7 @@
          * @param {string} msg Message d'erreur à afficher
          */
         this.raiseError = function raiseError(msg) {
-            //TODO: Méthode Kernel::raiseError()
-            internalLogger.error(msg);
+            toastr.error(msg, "Erreur survenue");
         };
 
         /**
@@ -4293,6 +4395,7 @@
                         applications[applicationId].instance.dispatch('start');
                     } catch (e) {
                         internalLogger.error(e);
+                        toastr.error(e.message, "Erreur survenue");
                     }
 
                 });
@@ -4322,6 +4425,7 @@
                     applications[applicationId].instance.dispatch('stop');
                 } catch (e) {
                     internalLogger.error(e);
+                    toastr.error(e.message, "Erreur survenue");
                 }
             }
         };
@@ -4348,8 +4452,7 @@
          * @param {string} msg Message d'avertissement à afficher
          */
         this.warn = function warn(msg) {
-            //TODO: Méthode Kernel::warn()
-            internalLogger.warning(msg);
+            toastr.warning(msg, "Attention");
         };
     };
 
@@ -5736,6 +5839,21 @@
      * @constructor
      */
     GRA.utils.StringUtils = function StringUtils () {
+
+        /**
+         *
+         * @param {String} str Chaîne à échapper
+         * @returns {String}
+         */
+        this.cleanWordChars = function cleanWordChars(str) {
+            var cleaned = str.replace(/[\u2018\u2019\u201A]/g, "\'");
+
+            cleaned = cleaned.replace(/[\u201C\u201D\u201E]/g, "\"");
+            cleaned = cleaned.replace(/[\u2013\u2014]/g, "-");
+            cleaned = cleaned.replace(/\u2026/g, "...");
+
+            return cleaned;
+        };
 
         /**
          *

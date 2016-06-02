@@ -49,6 +49,12 @@ module.exports = function (grunt) {
             install_jquery: {
                 command: 'bower install jquery'
             },
+            install_bootstrap: {
+                command: 'bower install bootstrap'
+            },
+            install_font_awesome: {
+                command: 'bower install font-awesome'
+            },
             install_toastr: {
                 command: 'bower install toastr'
             }

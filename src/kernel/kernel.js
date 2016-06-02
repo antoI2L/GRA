@@ -7,6 +7,24 @@
     // Initialisation des namespaces
     GRA.kernel = GRA.kernel || {};
 
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "300",
+        "timeOut": "6000",
+        "extendedTimeOut": "1200",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
     /**
      * Classe KernelApi
      *
@@ -177,6 +195,7 @@
                     app.dispatch('boot');
                 } catch (e) {
                     internalLogger.error(e);
+                    toastr.error(e.message, "Erreur survenue");
                 }
             }
         };
@@ -194,10 +213,38 @@
          * Permet de créer une application
          *
          * @param {string} applicationName Nom de l'application à créer
-         * @returns {Application} L'Application créée
+         * @returns {GRA.kernel.Application} L'Application créée
          */
         this.createApplication = function createApplication(applicationName) {
             return new GRA.kernel.Application(applicationName);
+        };
+
+        /**
+         * Permet de créer un composant à partir de son nom.
+         *
+         * @param {String} componentName Nom du composant
+         * @returns {*}
+         */
+        this.createComponent = function createComponent(componentName) {
+            var component,
+                realComponentName,
+                stringUtils = GRA.utils.StringUtils;
+
+            if (GRA.component.hasOwnProperty(componentName)) {
+                component = new GRA.component[componentName]();
+                component.create();
+            } else if (stringUtils.has('-', componentName)) {
+                realComponentName = componentName.replace(/\-/g, ' ');
+                realComponentName = stringUtils.ucfirstAll(realComponentName);
+                realComponentName = realComponentName.replace(/\s/g, '');
+
+                if (GRA.component.hasOwnProperty(realComponentName)) {
+                    component = new GRA.component[realComponentName]();
+                    component.create();
+                }
+            }
+
+            return component;
         };
 
         /**
@@ -242,11 +289,10 @@
          * @param {string} level Niveau du message
          */
         this.notify = function notify(msg, level) {
-            //TODO: Méthode Kernel::notify()
             if ('success' === level) {
-                internalLogger.log(msg);
+                toastr.success(msg, "Information");
             } else {
-                internalLogger.info(msg);
+                toastr.info(msg, "Information");
             }
         };
 
@@ -266,8 +312,7 @@
          * @param {string} msg Message d'erreur à afficher
          */
         this.raiseError = function raiseError(msg) {
-            //TODO: Méthode Kernel::raiseError()
-            internalLogger.error(msg);
+            toastr.error(msg, "Erreur survenue");
         };
 
         /**
@@ -302,6 +347,7 @@
                         applications[applicationId].instance.dispatch('start');
                     } catch (e) {
                         internalLogger.error(e);
+                        toastr.error(e.message, "Erreur survenue");
                     }
 
                 });
@@ -331,6 +377,7 @@
                     applications[applicationId].instance.dispatch('stop');
                 } catch (e) {
                     internalLogger.error(e);
+                    toastr.error(e.message, "Erreur survenue");
                 }
             }
         };
@@ -357,8 +404,7 @@
          * @param {string} msg Message d'avertissement à afficher
          */
         this.warn = function warn(msg) {
-            //TODO: Méthode Kernel::warn()
-            internalLogger.warning(msg);
+            toastr.warning(msg, "Attention");
         };
     };
 

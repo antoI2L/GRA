@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Librairie GRA.js Classes</title>
+	<title>Librairie GRA.js Source: component/go-to-top.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,193 +65,77 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Classes</h1>
+		<h1 class="page-title">Source: component/go-to-top.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">(function (GRA) {
 
-<header>
-    
-        <h2>
-        
-        </h2>
-        
-    
-</header>
+    GRA.component = GRA.component || {};
 
+    /**
+     *
+     * @constructor
+     */
+    GRA.component.BackToTop = function BackToTop() {
 
-<article>
-    <div class="container-overview">
-    
-        
+        var selector = '#gra-back-to-top',
+            html = [
+                '&lt;a id="gra-back-to-top" href="#" class="btn gra-button-bleu-edf btn-lg" role="button" title="Retour en haut de page" data-toggle="tooltip" data-placement="left">',
+                '&lt;span class="glyphicon glyphicon-chevron-up">&lt;/span>&lt;/a>'
+            ].join('');
 
-        
-<dl class="details">
-    
+        /**
+         *
+         */
+        this.create = function create() {
+            var body = $('body'),
+                thisHtml = $('html'),
+                thisWindow = $(window),
+                backToTop;
 
-	
+            body.append(html);
+            backToTop = $(selector);
+            backToTop.tooltip('show');
 
-	
+            thisWindow.on('scroll', function () {
+                if (5 * 10 &lt; thisWindow.scrollTop()) {
+                    backToTop.fadeIn();
+                }
+                else {
+                    backToTop.fadeOut();
+                }
+            });
 
-	
+            backToTop.on('click', function (e) {
+                e.preventDefault();
 
-    
+                backToTop.tooltip('hide');
+                thisHtml.animate({
+                    scrollTop: 0
+                }, 5 * 10 * 10);
+            });
+        };
 
-    
+        /**
+         *
+         * @returns {string}
+         */
+        this.getCssSelector = function getCssSelector() {
+            return selector;
+        };
+    };
 
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="GRA.ajax.Ajax.html">Ajax</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.ajax.Factory.html">Factory</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.component.BackToTop.html">BackToTop</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.BinarySearchTree.html">BinarySearchTree</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Map.html">Map</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Queue.html">Queue</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Queue-QueueIterator.html">QueueIterator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Stack.html">Stack</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Vector.html">Vector</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.datastructure.Vector-VectorIterator.html">VectorIterator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Collection.html">Collection</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Element.html">Element</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.Finder.html">Finder</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.dom.JQueryProxy.html">JQueryProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.ExecutionQueue.html">ExecutionQueue</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.Manager.html">Manager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.fn.Promise.html">Promise</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.form.Form.html">Form</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.form.Validator.html">Validator</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Application.html">Application</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Bus.html">Bus</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Kernel.html">Kernel</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.kernel.Message.html">Message</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.model.Model.html">Model</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.storage.local.html">local</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.storage.session.html">session</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.ArrayUtils.html">ArrayUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.DateUtils.html">DateUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.is.html">is</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.ObjectUtils.html">ObjectUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.StringUtils.html">StringUtils</a></dt>
-            <dd></dd>
-        
-            <dt><a href="GRA.utils.TokenUtils.html">TokenUtils</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+}(GRA || {}));</pre>
+    </article>
 </section>
+
 
 
 
@@ -261,10 +145,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

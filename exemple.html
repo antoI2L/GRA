@@ -3,9 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="vendor/toastr/toastr.min.css"/>
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="vendor/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="dist/gra.css"/>
 </head>
-<body>
+<body style="height: 1200px">
 
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Exemple</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Test</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="vendor/toastr/toastr.min.js"></script>
 <script src="dist/gra.min.js"></script>
 <script type="text/javascript">
     var kernel = GRA.kernel.Kernel,
@@ -14,19 +44,24 @@
     kernel.setDebug(true);
 
     kernel.boot(function () {
-        var application = new GRA.kernel.Application('include');
+        var application = new GRA.kernel.Application('example');
 
         application.on('boot', function () {
             application.get('logger').log(application.uid);
+            application.notifyUser('Mon UID : ' + application.uid);
         });
 
         application.on('start', function () {
+            kernel.createComponent('back-to-top');
+
             application.get('logger').info('Je démarre');
+            application.notifyUser('Je démarre', 'success');
             throw new Error("Oups... Erreur survenue pendant le démarrage...");
         });
 
         application.on('stop', function () {
-            application.get('logger').error('Je meurt...');
+            application.get('logger').error('Je suis stoppé');
+            application.raiseError('Je suis stoppé');
         });
 
         return application;

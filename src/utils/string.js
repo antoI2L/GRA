@@ -11,6 +11,21 @@
 
         /**
          *
+         * @param {String} str Chaîne à échapper
+         * @returns {String}
+         */
+        this.cleanWordChars = function cleanWordChars(str) {
+            var cleaned = str.replace(/[\u2018\u2019\u201A]/g, "\'");
+
+            cleaned = cleaned.replace(/[\u201C\u201D\u201E]/g, "\"");
+            cleaned = cleaned.replace(/[\u2013\u2014]/g, "-");
+            cleaned = cleaned.replace(/\u2026/g, "...");
+
+            return cleaned;
+        };
+
+        /**
+         *
          * @param arrayOfStrings
          * @param separator
          * @returns {string|*}
