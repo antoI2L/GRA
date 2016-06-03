@@ -223,16 +223,17 @@
          * Permet de créer un composant à partir de son nom.
          *
          * @param {String} componentName Nom du composant
+         * @param {Function} builder Constructeur du composant
          * @returns {*}
          */
-        this.createComponent = function createComponent(componentName) {
+        this.createComponent = function createComponent(componentName, builder) {
             var component,
                 realComponentName,
                 stringUtils = GRA.utils.StringUtils;
 
             if (GRA.component.hasOwnProperty(componentName)) {
                 component = new GRA.component[componentName]();
-                component.create();
+                component.create(builder);
             } else if (stringUtils.has('-', componentName)) {
                 realComponentName = componentName.replace(/\-/g, ' ');
                 realComponentName = stringUtils.ucfirstAll(realComponentName);
@@ -240,7 +241,7 @@
 
                 if (GRA.component.hasOwnProperty(realComponentName)) {
                     component = new GRA.component[realComponentName]();
-                    component.create();
+                    component.create(builder);
                 }
             }
 

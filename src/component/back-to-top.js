@@ -10,7 +10,7 @@
 
         var selector = '#gra-back-to-top',
             html = [
-                '<a id="gra-back-to-top" href="#" class="btn gra-button-bleu-edf btn-lg" role="button" title="Retour en haut de page" data-toggle="tooltip" data-placement="left">',
+                '<a id="gra-back-to-top" href="#" class="btn btn-primary btn-lg" role="button" title="Retour en haut de page" data-toggle="tooltip" data-placement="left">',
                 '<span class="glyphicon glyphicon-chevron-up"></span></a>'
             ].join('');
 

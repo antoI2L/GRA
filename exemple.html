@@ -17,18 +17,9 @@
             <h4 class="panel-title">Exemple</h4>
         </div>
         <div class="panel-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Test</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Test</td>
-                    </tr>
-                </tbody>
-            </table>
+            <button class="btn btn-info" data-toggle="modal" data-target="#gra-file-downloader">
+                <i class="fa fa-cloud-download"></i> Téléchargements
+            </button>
         </div>
     </div>
 </div>
@@ -36,7 +27,7 @@
 <script src="vendor/jquery/dist/jquery.min.js"></script>
 <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="vendor/toastr/toastr.min.js"></script>
-<script src="dist/gra.min.js"></script>
+<script src="dist/gra.js"></script>
 <script type="text/javascript">
     var kernel = GRA.kernel.Kernel,
         fnManager = new GRA.fn.Manager();
@@ -52,6 +43,21 @@
         });
 
         application.on('start', function () {
+            kernel.createComponent('file-downloader', function (downloader) {
+                downloader.addFile({
+                    link: '#test',
+                    filename: 'test.xls',
+                    type: 'application/vnd.ms-excel',
+                    size: '348 ko'
+                });
+
+                downloader.addFile({
+                    link: '#test2',
+                    filename: 'test2.xls',
+                    type: 'application/vnd.ms-excel',
+                    size: '879 ko'
+                });
+            });
             kernel.createComponent('back-to-top');
 
             application.get('logger').info('Je démarre');
