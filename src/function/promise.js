@@ -155,4 +155,10 @@
         fn(resolve, reject);
     };
 
+    GRA.fn.Promise.resolve = function resolve(value) {
+        return new GRA.fn.Promise(function (resolve) {
+            resolve(value);
+        });
+    };
+
 }(GRA || {}));

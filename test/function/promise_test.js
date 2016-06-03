@@ -48,3 +48,15 @@ QUnit.test("Gestion des erreurs d'une promesse", function (assert) {
         done();
     });
 });
+
+QUnit.test("Résolution d'une promesse", function (assert) {
+    var done;
+
+    done = assert.async();
+    assert.expect(1);
+
+    GRA.fn.Promise.resolve(5).then(function (result) {
+        assert.equal(5, result, "Le résultat doit être 5");
+        done();
+    });
+});
