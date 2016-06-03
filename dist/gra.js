@@ -4345,6 +4345,15 @@
         };
 
         /**
+         * Permet d'ouvrir une page dans un nouvel onglet
+         *
+         * @param {String} url URL à ouvrir dans un nouvel onglet
+         */
+        this.openInNewTab = function openInNewTab(url) {
+            window.open(url, '_blank');
+        };
+
+        /**
          * Permet d'ajouter un composant à l'API
          *
          * @param {string} componentName Nom du composant
@@ -4361,6 +4370,24 @@
          */
         this.raiseError = function raiseError(msg) {
             toastr.error(msg, "Erreur survenue");
+        };
+
+        /**
+         * Permet d'effectuer une redirection
+         *
+         * @param {String} url URL à laquelle rediriger l'utilisateur
+         */
+        this.redirect = function redirect(url) {
+            document.location.href = url;
+        };
+
+        /**
+         * Permet de recharger la page
+         *
+         * @param {Boolean} ignoreCache Ignorer ou non le cache
+         */
+        this.reloadPage = function reloadPage(ignoreCache) {
+            window.location.reload(!!ignoreCache);
         };
 
         /**
@@ -4419,15 +4446,20 @@
          * @param {string} applicationId Nom de l'application à stopper
          */
         this.stop = function stop(applicationId) {
-            if (this.isStarted(applicationId)) {
-                applications[applicationId].started = false;
-                try {
-                    applications[applicationId].instance.dispatch('stop');
-                } catch (e) {
-                    internalLogger.error(e);
-                    toastr.error(e.message, "Erreur survenue");
+            var self = this,
+                fnManager = new GRA.fn.Manager();
+
+            fnManager.runWhenReady(function stopFunction() {
+                if (self.isStarted(applicationId)) {
+                    applications[applicationId].started = false;
+                    try {
+                        applications[applicationId].instance.dispatch('stop');
+                    } catch (e) {
+                        internalLogger.error(e);
+                        toastr.error(e.message, "Erreur survenue");
+                    }
                 }
-            }
+            });
         };
 
         /**
